@@ -2,9 +2,8 @@
 #Region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_Icon=Resource\Icon.ico
 #AutoIt3Wrapper_Outfile=bin\kfv-installer.exe
-#AutoIt3Wrapper_Outfile_x64=bin\kfv-installer(x64).exe
 #AutoIt3Wrapper_Compression=4
-#AutoIt3Wrapper_Compile_Both=y
+#AutoIt3Wrapper_UseX64=n
 #AutoIt3Wrapper_Res_Comment=KyTs Font Viewer Installer Software
 #AutoIt3Wrapper_Res_Description=KyTs Installer
 #AutoIt3Wrapper_Res_Fileversion=1.0.0.0
@@ -529,14 +528,14 @@ Func _StartInstall()
 		DirCreate($sInstallDir)
 		_SetProgressTo(10)
 		If (@OSArch == "X86") Then
-			FileInstall('KyTs Font Viewer.exe', $sInstallDir & '\KyTs Font Viewer.exe', 1)
+			FileInstall('bin/KyTs Font Viewer.exe', $sInstallDir & '\KyTs Font Viewer.exe', 1)
 		Else
-			FileInstall('KyTs Font Viewer_x64.exe', $sInstallDir & '\KyTs Font Viewer.exe', 1)
+			FileInstall('bin/KyTs Font Viewer_x64.exe', $sInstallDir & '\KyTs Font Viewer.exe', 1)
 		EndIf
 		FileCreateShortcut($sInstallDir & '\KyTs Font Viewer.exe', @DesktopDir & '\KyTs Font Viewer.lnk')
-		FileInstall('Helper.exe', $sInstallDir & '\Helper.exe', 1)
+		FileInstall('bin/Helper.exe', $sInstallDir & '\Helper.exe', 1)
 		FileInstall('Resource\ReadMe.rtf', $sInstallDir & '\ReadMe.rtf', 1)
-		FileInstall('Uninstall.exe', $sInstallDir & '\Uninstall.exe', 1)
+		FileInstall('bin/Uninstall.exe', $sInstallDir & '\Uninstall.exe', 1)
 		DirCreate($sInstallDir & '\Resource')
 		FileInstall('Resource\Icon_mini.png', $sInstallDir & '\Resource\Icon_mini.png', 1)
 		FileInstall('Resource\FontAwesome.otf', $sInstallDir & '\Resource\FontAwesome.otf', 1)
