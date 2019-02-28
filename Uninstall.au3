@@ -16,6 +16,7 @@ Else
 	Msgbox(16,'KyTs Font Viewer - Uninstaller',$_ErrorMesage)
 EndIf
 
+; Uninstall script
 Func _Uninstall()
 	If @Compiled Then
 		Global Const $sInstallDir = RegRead($SoftwareKey, "Install")
