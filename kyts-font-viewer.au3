@@ -37,7 +37,7 @@ Opt("GUIOnEventMode", 1)
 #include <StaticConstants.au3>
 #include "UDF\TVExplorer.au3"
 
-#Region	; Load Font Awesome Resource and Detect default font
+#Region	; Load Font Awesome Resource and Detect default fonts
 Global Const $sFontAwesomePath = @ScriptDir & "\Resource\FontAwesome.otf"
 Global Const $sFontAwesomeName = _WinAPI_GetFontResourceInfo($sFontAwesomePath, True)
 _WinAPI_AddFontResourceEx($sFontAwesomePath, $FR_PRIVATE)

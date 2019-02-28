@@ -30,7 +30,7 @@ Opt("GUIOnEventMode", 1)
 #include <WindowsConstants.au3>
 #include <StaticConstants.au3>
 
-#Region	; Load Font Awesome Resource and Detect default font
+#Region	; Load Font Awesome Resource and Detect default fonts
 Global Const $sFontAwesomePath = @ScriptDir & "\Resource\FontAwesome.otf"
 Global Const $sFontAwesomeName = _WinAPI_GetFontResourceInfo($sFontAwesomePath, True)
 _WinAPI_AddFontResourceEx($sFontAwesomePath, $FR_PRIVATE)
