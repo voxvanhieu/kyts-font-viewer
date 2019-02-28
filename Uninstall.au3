@@ -1,7 +1,7 @@
 #RequireAdmin
 #Region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_Icon=Resource\uninstall.ico
-#AutoIt3Wrapper_Outfile=bin\uninstall.Exe
+#AutoIt3Wrapper_Outfile=bin\uninstall.exe
 #AutoIt3Wrapper_Compression=4
 #AutoIt3Wrapper_UseX64=n
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
