@@ -539,8 +539,8 @@ Func _StartInstall()
 		DirCreate($sInstallDir & '\Resource')
 		FileInstall('Resource\Icon_mini.png', $sInstallDir & '\Resource\Icon_mini.png', 1)
 		FileInstall('Resource\FontAwesome.otf', $sInstallDir & '\Resource\FontAwesome.otf', 1)
-		FileInstall('Resource\Help_EN.rtf', $sInstallDir & 'Resource\Help_EN.rtf', 1)
-		FileInstall('Resource\Help_VN.rtf', $sInstallDir & 'Resource\Help_VN.rtf', 1)
+		FileInstall('Resource\Help_EN.rtf', $sInstallDir & '\Resource\Help_EN.rtf', 1)
+		FileInstall('Resource\Help_VN.rtf', $sInstallDir & '\Resource\Help_VN.rtf', 1)
 		_SetProgressTo(20)
 
 		Global Const $Key  = 'HKCU\Software\KyTs Tech\KyTs Font Viewer'
