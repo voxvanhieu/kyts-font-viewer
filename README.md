@@ -1,10 +1,14 @@
 # KyTs Font Viewer
+
 KyTs Font Viewer is a program help users easily to view and install font in Windows.
+
 Developer website: https://www.hieuda.com/
 
 # Required library:
+
 Replace the following UDF to AutoIT's includes directory.
-/UDF/WinAPIGdi.au3 > [***%ProgramFiles%***|***%ProgramFiles(x86)%***]\AutoIt3\Include\WinAPIGdi.au3
+
+/UDF/WinAPIGdi.au3 > ***%ProgramFiles%(%ProgramFiles(x86)%)***\AutoIt3\Include\WinAPIGdi.au3
 
 # How to compile:
 - Compile "KyTs Font Viewer.au3", "Helper.au3", "Uninstall.au3"
