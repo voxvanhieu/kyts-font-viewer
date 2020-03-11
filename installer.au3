@@ -49,17 +49,6 @@ _WinAPI_AddFontResourceEx($sFontAwesomePatch, $FR_PRIVATE)
 
 _GDIPlus_Startup()
 
-#Region 	; Reduce Memory Register
-AdlibRegister(_ReduceMemory, 500)
-Func _ReduceMemory()
-    Local $ai_GetCurrentProcessId = DllCall("kernel32.dll", "int", "GetCurrentProcessId")
-    Local $ai_Handle = DllCall("kernel32.dll", "int", "OpenProcess", "int", 0x1f0fff, "int", False, "int", $ai_GetCurrentProcessId[0])
-    Local $ai_Return = DllCall("psapi.dll", "int", "EmptyWorkingSet", "long", $ai_Handle[0])
-    DllCall("kernel32.dll", "int", "CloseHandle", "int", $ai_Handle[0])
-    Return $ai_Return[0]
-EndFunc
-#EndRegion
-
 #Region ; Main GUI and Controls
 $hGUI = GUICreate($Tile, $gW, $gH+50, -1, -1, BitOR($WS_POPUP, $WS_BORDER))
 GUISetBkColor(0xFFFFFF)
@@ -440,24 +429,10 @@ Func _Exit()
 	EndIf
 
 	If (@Compiled) Then ShellExecute($InstallDir & "\KyTs Font Viewer.exe")
-	If (@Compiled) And ($_IsOpt3 < 2) Then ShellExecute("http://kytstech.blogspot.com")
+	If (@Compiled) And ($_IsOpt3 < 2) Then ShellExecute($homePageLink)
 	Exit
 EndFunc
 
-Func _GDIPlus_CreatePic($FileName, $Left, $Top, $Width, $Heigth)
-	Local $hPicCtrl, $_hImage, $hImage, $iHeight, $hGDIBitmap
-	$_hImage = _GDIPlus_ImageLoadFromFile($FileName)
-	$hImage = _GDIPlus_ImageResize($_hImage, $Width, $Heigth)
-		$iWidth = _GDIPlus_ImageGetWidth($hImage)
-		$iHeight = _GDIPlus_ImageGetHeight($hImage)
-		$hGDIBitmap = _GDIPlus_BitmapCreateHBITMAPFromBitmap($hImage)
-		_GDIPlus_ImageDispose($hImage)
-		_GDIPlus_ImageDispose($_hImage)
-	$hPicCtrl = GUICtrlCreateLabel("", $Left, $Top, $Width, $Heigth, $SS_BITMAP)
-	_WinAPI_DeleteObject(GUICtrlSendMsg($hPicCtrl, 0x0172, $IMAGE_BITMAP, $hGDIBitmap)) ;$STM_SETIMAGE = 0x0172
-    _WinAPI_DeleteObject($hGDIBitmap)
-	Return $hPicCtrl
-EndFunc			;~	Using GDIPlus to create Picture control, shouldn"t create many control with this and project use GDIPlus
 Func _TabChange()
 	Switch @GUI_CtrlId
 		Case $lb_AutoInstall, $lb_AutoInstall_Icon
@@ -487,7 +462,7 @@ Func _SellectFolder()
 	EndIf
 EndFunc
 Func _GotoFacebookPage()
-	ShellExecute("https://www.facebook.com/kytstech")
+	ShellExecute("https://www.facebook.com/voxvanhieu")
 EndFunc
 Func _DrawProgress($iPersent = 50)
 	If $iPersent >= 100 Then $iPersent = 100
@@ -524,7 +499,7 @@ Func _StartInstall()
 		FileInstall("bin\Helper.exe", $sInstallDir & "\Helper.exe", 1)
 		FileInstall("assets\ReadMe.rtf", $sInstallDir & "\ReadMe.rtf", 1)
 		FileInstall("bin\Uninstall.exe", $sInstallDir & "\Uninstall.exe", 1)
-		DirCreate($sInstallDir & "\Resource")
+		DirCreate($sInstallDir & "\assets")
 		FileInstall("assets\Icon_mini.png", $sInstallDir & "\assets\Icon_mini.png", 1)
 		FileInstall("assets\FontAwesome.otf", $sInstallDir & "\assets\FontAwesome.otf", 1)
 		FileInstall("assets\Help_EN.rtf", $sInstallDir & "\assets\Help_EN.rtf", 1)
@@ -640,19 +615,19 @@ EndFunc
 Func _MenuBarClicked()
 	Switch @GUI_CtrlId
 		Case $MenuBar1
-			ShellExecute("http://kytstech.blogspot.com")
+			ShellExecute($homePageLink)
 		Case $MenuBar2
-			ShellExecute("https://www.facebook.com/kytstech")
+			ShellExecute("https://www.facebook.com/voxvanhieu")
 		Case $MenuBar3
 			ShellExecute("https://mail.google.com/mail/u/0/?view=cm" & _
 					"&fs=1" & _
-					"&to=kytstech@gmail.com" & _
+					"&to=hieuvv.dev@gmail.com" & _
 					"&su=Feedback about KyTs product" & _
 					"&body=[Do not delete this line - Feedback send from KyTs Installer - KyTsFontViewer]")
 		Case $MenuBar4
-			ShellExecute("https://github.com/KyTsTech")
+			ShellExecute("https://github.com/voxvanhieu")
 		Case $MenuBar5
-			ShellExecute("https://www.youtube.com/channel/UCafv7YUCiHycC6VUoBz0O1Q?sub_confirmation=1")
+			ShellExecute("https://www.youtube.com/")
 		Case $MenuBar6
 			If Not @Compiled Then Msgbox(0,"Thông Báo","Hiện tab thông tin tác giả!")
 	EndSwitch

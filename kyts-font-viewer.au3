@@ -4,6 +4,7 @@
 #AutoIt3Wrapper_Outfile_x64=bin\KyTs Font Viewer_x64.exe
 #AutoIt3Wrapper_Compression=4
 #AutoIt3Wrapper_Compile_Both=y
+#AutoIt3Wrapper_UseX64=y
 #AutoIt3Wrapper_Res_Comment=KyTs Font Viewer is a program help users easily to view and install font in Windows computers.
 #AutoIt3Wrapper_Res_Description=KyTs Font Viewer
 #AutoIt3Wrapper_Res_Fileversion=1.2.0.0
