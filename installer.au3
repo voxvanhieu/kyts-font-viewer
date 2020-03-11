@@ -22,7 +22,7 @@ Global $SoftwareName = "KyTs Font Viewer"
 Global $Tile = $SoftwareName & " Installer"
 Global $gW = 600, $gH = 150
 
-#Region	;Install resource
+#Region	Install temp resource
 If @Compiled Then
 	Global $sTempDir = @TempDir & "\KyTs Tech"
 	DirCreate($sTempDir)
@@ -42,16 +42,9 @@ Else
 EndIf
 #EndRegion
 
-#Region	; Load Font Awesome Resource and Detect default font
+#Region	; Load Font Awesome Resource
 Global Const $sFontAwesomeName = _WinAPI_GetFontResourceInfo($sFontAwesomePatch, True)
 _WinAPI_AddFontResourceEx($sFontAwesomePatch, $FR_PRIVATE)
-
-Global $DefaultFont
-If (StringInStr(@OSVersion, "WIN_VISTA|WIN_XP|WIN_XPe|WIN_2008R2|WIN_2008|WIN_2003") == 0) Then
-	$DefaultFont = "Segoe UI"
-Else
-	$DefaultFont = "Arial"
-EndIf
 #EndRegion
 
 _GDIPlus_Startup()
