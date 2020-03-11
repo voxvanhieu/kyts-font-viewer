@@ -6,3 +6,5 @@ Else
 	$DefaultFont = "Arial"
 EndIf
 #EndRegion
+
+Global Const $homePageLink = "https://www.hieuda.com/"
