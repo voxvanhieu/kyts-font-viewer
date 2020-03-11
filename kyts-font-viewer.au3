@@ -1,5 +1,5 @@
 ﻿#Region ;**** Directives created by AutoIt3Wrapper_GUI ****
-#AutoIt3Wrapper_Icon=Resource\Icon.ico
+#AutoIt3Wrapper_Icon=assets\Icon.ico
 #AutoIt3Wrapper_Outfile=bin\KyTs Font Viewer.exe
 #AutoIt3Wrapper_Outfile_x64=bin\KyTs Font Viewer_x64.exe
 #AutoIt3Wrapper_Compression=4
@@ -28,21 +28,14 @@ Opt("TrayIconHide", 1)
 Opt("GUICloseOnESC", 1)
 Opt("GUIOnEventMode", 1)
 
-#include <File.au3>
-#include <GDIPlus.au3>
-#include <WinAPI.au3>
-#include <GUITab.au3>
-#include <GuiConstants.au3>
-#include <WindowsConstants.au3>
-#include <StaticConstants.au3>
-#include "UDF\TVExplorer.au3"
+#include "lib\Lib.App.au3"
 
 #Region	; Load Font Awesome Resource and Detect default fonts
-Global Const $sFontAwesomePath = @ScriptDir & "\Resource\FontAwesome.otf"
+Global Const $sFontAwesomePath = @ScriptDir & "\assets\FontAwesome.otf"
 Global Const $sFontAwesomeName = _WinAPI_GetFontResourceInfo($sFontAwesomePath, True)
 _WinAPI_AddFontResourceEx($sFontAwesomePath, $FR_PRIVATE)
 
-Global $CurentFontPath = @WindowsDir & '\Fonts\Arial.ttf', $CurentFontName = 'Arial'
+Global $CurentFontPath = @WindowsDir & "\Fonts\Arial.ttf", $CurentFontName = "Arial"
 Global $DefaultFont
 If (StringInStr(@OSVersion, "WIN_VISTA|WIN_XP|WIN_XPe|WIN_2008R2|WIN_2008|WIN_2003") == 0) Then
 	$DefaultFont = "Segoe UI"
@@ -54,8 +47,8 @@ EndIf
 Global Const $iMargin = 10; distance from edge of window where dragging is possible
 Global Const $SC_DRAGMOVE = 0xF012
 Global Const $TileBarHeigth = 35
-Global Const $sStringShow = 'The quick brown fox jumps over the lazy dog. 1234567890'
-Global Const $TypeFont = '.FON.FNT.TTF.TTC.FOT.OTF.MMM.PFB.PFM'
+Global Const $sStringShow = "The quick brown fox jumps over the lazy dog. 1234567890"
+Global Const $TypeFont = ".FON.FNT.TTF.TTC.FOT.OTF.MMM.PFB.PFM"
 Global $hGUI
 Global Const $Tile = "KyTs Font Viewer"
 Global $gW = 950, $gH = 600
@@ -69,7 +62,7 @@ Global $inp_Tab_CustomText_CurentAlgin
 Global $GUIState = @SW_SHOWNORMAL
 Global $CurentTab, $hFocus = 0
 Global $CharMapCtrlSize = 0, $CharMapCtrlTop = 1
-Global $CurentTV_Input_Data = ''
+Global $CurentTV_Input_Data = ""
 
 _GDIPlus_Startup()
 
@@ -80,12 +73,12 @@ GUISetBkColor(0xFFFFFF)
 GUISetOnEvent($GUI_EVENT_CLOSE, "_Exit")
 GUISetOnEvent($GUI_EVENT_RESTORE, "_Restore")
 ; Create tile bar
-GUICtrlCreateLabel('', 0, 0, $gW, $TileBarHeigth)
+GUICtrlCreateLabel("", 0, 0, $gW, $TileBarHeigth)
 GUICtrlSetBkColor(-1, 0x2D2D30)
 GUICtrlSetState(-1, $GUI_DISABLE)
 GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKTOP + $GUI_DOCKRIGHT + $GUI_DOCKHEIGHT)
 
-_GDIPlus_CreatePic(@ScriptDir & "\Resource\Icon_mini.png", 5, 5, 25, 25)
+_GDIPlus_CreatePic(@ScriptDir & "\assets\Icon_mini.png", 5, 5, 25, 25)
 GUICtrlSetBkColor(-1, -2)
 GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKTOP + $GUI_DOCKWIDTH + $GUI_DOCKHEIGHT)
 
@@ -93,7 +86,7 @@ GUICtrlCreateLabel($Tile, 35, 0, $gW-185, $TileBarHeigth, $SS_CENTERIMAGE)
 GUICtrlSetColor(-1, 0xFFFFFF)
 GUICtrlSetBkColor(-1, -2)
 GUICtrlSetFont(-1, 13, 0, 0, $DefaultFont & " SemiBold", 5)
-GUICtrlSetOnEvent(-1,'_FormMove')
+GUICtrlSetOnEvent(-1,"_FormMove")
 GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKTOP + $GUI_DOCKRIGHT + $GUI_DOCKHEIGHT)
 
 GUICtrlCreateLabel(ChrW(0xf00d), $gW-40, 0, 35, 35, BitOR($SS_CENTER, $SS_CENTERIMAGE))
@@ -114,8 +107,8 @@ GUICtrlSetTip(-1, "Maximize")
 GUICtrlSetOnEvent(-1, "_Maximize")
 GUICtrlSetResizing(-1, $GUI_DOCKTOP + $GUI_DOCKRIGHT + $GUI_DOCKHEIGHT + $GUI_DOCKWIDTH)
 
-;Because font awesome is'nt have minimize icon =))))
-GUICtrlCreateLabel('', $gW-113, 0, 35, 35)
+;Because font awesome is"nt have minimize icon =))))
+GUICtrlCreateLabel("", $gW-113, 0, 35, 35)
 GUICtrlSetBkColor(-1, 0x0081FF)
 GUICtrlSetCursor(-1, 0)
 GUICtrlSetFont(-1, 15, 0, 0, $sFontAwesomeName, 5)
@@ -138,31 +131,31 @@ GUICtrlSetOnEvent(-1, "_ShowHelp")
 GUICtrlSetResizing(-1, $GUI_DOCKTOP + $GUI_DOCKRIGHT + $GUI_DOCKHEIGHT + $GUI_DOCKWIDTH)
 
 ; Create status bar
-Global $lb_StatusBar = GUICtrlCreateLabel('    ' & $Tile & ' version 1.2 - KyTs Tech', 0, $gH-24, $gW, 25, $SS_CENTERIMAGE)
+Global $lb_StatusBar = GUICtrlCreateLabel("    " & $Tile & " version 1.2 - KyTs Tech", 0, $gH-24, $gW, 25, $SS_CENTERIMAGE)
 GUICtrlSetColor(-1, 0xFFFFFF)
 GUICtrlSetBkColor(-1, 0x1C8BFF)
 GUICtrlSetCursor(-1, 0)
 GUICtrlSetFont(-1, 9, 0, 0, $DefaultFont, 5)
 GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKRIGHT + $GUI_DOCKBOTTOM + $GUI_DOCKHEIGHT)
-GUICtrlSetOnEvent(-1, '_GoToHomePage')
+GUICtrlSetOnEvent(-1, "_GoToHomePage")
 ; Tree View
 GUICtrlCreateLabel(ChrW(0xf07c), 10, 45, 35, 35, BitOR($SS_CENTER, $SS_CENTERIMAGE))
 GUICtrlSetCursor(-1, 0)
-GUICtrlSetTip(-1, 'Browse')
+GUICtrlSetTip(-1, "Browse")
 GUICtrlSetFont(-1, 18, 0, 0, $sFontAwesomeName, 5)
-GUICtrlSetOnEvent(-1, '_OpenFileDialog')
+GUICtrlSetOnEvent(-1, "_OpenFileDialog")
 GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKTOP + $GUI_DOCKHEIGHT + $GUI_DOCKWIDTH)
-$TV_Input = GUICtrlCreateInput('', 45, 55, 195, 20, -1, 0)
+$TV_Input = GUICtrlCreateInput("", 45, 55, 195, 20, -1, 0)
 GUICtrlSetFont(-1, 12)
 GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKTOP + $GUI_DOCKHEIGHT + $GUI_DOCKWIDTH)
-GUICtrlCreateLabel('', 45, 75, 195, 2)
+GUICtrlCreateLabel("", 45, 75, 195, 2)
 GUICtrlSetBkColor(-1, 0x000000)
 GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKTOP + $GUI_DOCKHEIGHT + $GUI_DOCKWIDTH)
-GUICtrlCreateLabel('', 245, 40, 3, $gH-70)
+GUICtrlCreateLabel("", 245, 40, 3, $gH-70)
 GUICtrlSetBkColor(-1, 0x000000)
 GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKTOP + $GUI_DOCKBOTTOM + $GUI_DOCKWIDTH)
 
-$hTV = _GUICtrlTVExplorer_Create('', 10, 90, 230, $gH-120, -1, $WS_EX_CLIENTEDGE, -1, '_TVEvent')
+$hTV = _GUICtrlTVExplorer_Create("", 10, 90, 230, $gH-120, -1, $WS_EX_CLIENTEDGE, -1, "_TVEvent")
 GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKTOP + $GUI_DOCKBOTTOM + $GUI_DOCKWIDTH)
 
 ; Body GUI
@@ -171,7 +164,7 @@ GUICtrlSetFont(-1, 20, 0, 0, $DefaultFont)
 GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKTOP + $GUI_DOCKRIGHT + $GUI_DOCKHEIGHT)
 $lb_FontLocation = GUICtrlCreateLabel("Location:", 255, 75, $gW-335, 20, $SS_CENTERIMAGE)
 GUICtrlSetFont(-1, 10, 0, 0, $DefaultFont)
-GUICtrlSetOnEvent(-1, '_GotoAndCopy')
+GUICtrlSetOnEvent(-1, "_GotoAndCopy")
 GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKTOP + $GUI_DOCKRIGHT + $GUI_DOCKHEIGHT)
 
 ; Create Tab Label
@@ -199,35 +192,35 @@ GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKTOP + $GUI_DOCKWIDTH + $GUI_DOCK
 
 ; Navigation Controls
 Global $lb_InstallFont = GUICtrlCreateLabel(ChrW(0xf019), $gW-40, 105, 30, 30, BitOR($SS_CENTER, $SS_CENTERIMAGE))
-GUICtrlSetTip(-1, 'Install this Font')
+GUICtrlSetTip(-1, "Install this Font")
 GUICtrlSetCursor(-1, 0)
 GUICtrlSetFont(-1, 12, 0, 0, $sFontAwesomeName, 5)
-GUICtrlSetOnEvent(-1, '_NavigationBarSelect')
+GUICtrlSetOnEvent(-1, "_NavigationBarSelect")
 GUICtrlSetResizing(-1, $GUI_DOCKTOP + $GUI_DOCKRIGHT + $GUI_DOCKWIDTH + $GUI_DOCKHEIGHT)
 
 Global $lb_DeleteFont = GUICtrlCreateLabel(ChrW(0xf1f8 ), $gW-70, 105, 30, 30, BitOR($SS_CENTER, $SS_CENTERIMAGE))
-GUICtrlSetTip(-1, 'Delete File')
+GUICtrlSetTip(-1, "Delete File")
 GUICtrlSetCursor(-1, 0)
 GUICtrlSetFont(-1, 12, 0, 0, $sFontAwesomeName, 5)
-GUICtrlSetOnEvent(-1, '_NavigationBarSelect')
+GUICtrlSetOnEvent(-1, "_NavigationBarSelect")
 GUICtrlSetResizing(-1, $GUI_DOCKTOP + $GUI_DOCKRIGHT + $GUI_DOCKWIDTH + $GUI_DOCKHEIGHT)
 
 Global $lb_NextFont = GUICtrlCreateLabel(ChrW(0xf054), $gW-100, 105, 30, 30, BitOR($SS_CENTER, $SS_CENTERIMAGE))
-GUICtrlSetTip(-1, 'Next Font')
+GUICtrlSetTip(-1, "Next Font")
 GUICtrlSetCursor(-1, 0)
 GUICtrlSetFont(-1, 12, 0, 0, $sFontAwesomeName, 5)
-GUICtrlSetOnEvent(-1, '_NavigationBarSelect')
+GUICtrlSetOnEvent(-1, "_NavigationBarSelect")
 GUICtrlSetResizing(-1, $GUI_DOCKTOP + $GUI_DOCKRIGHT + $GUI_DOCKWIDTH + $GUI_DOCKHEIGHT)
 
 Global $lb_PreviousFont = GUICtrlCreateLabel(ChrW(0xf053), $gW-130, 105, 30, 30, BitOR($SS_CENTER, $SS_CENTERIMAGE))
-GUICtrlSetTip(-1, 'Previous Font')
+GUICtrlSetTip(-1, "Previous Font")
 GUICtrlSetCursor(-1, 0)
 GUICtrlSetFont(-1, 12, 0, 0, $sFontAwesomeName, 5)
-GUICtrlSetOnEvent(-1, '_NavigationBarSelect')
+GUICtrlSetOnEvent(-1, "_NavigationBarSelect")
 GUICtrlSetResizing(-1, $GUI_DOCKTOP + $GUI_DOCKRIGHT + $GUI_DOCKWIDTH + $GUI_DOCKHEIGHT)
 ; Navigation Controls
 
-GUICtrlCreateLabel('',255, 135, $gW-(255+10), 5)
+GUICtrlCreateLabel("",255, 135, $gW-(255+10), 5)
 GUICtrlSetBkColor(-1, 0x1C8BFF)
 GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKTOP + $GUI_DOCKRIGHT + $GUI_DOCKHEIGHT)
 $CurentTab = $lb_Tab_Overview
@@ -236,29 +229,29 @@ $CurentTab = $lb_Tab_Overview
 $hTab = GUICtrlCreateTab(255, 135, $gW-(255+10), $gH-165, BitOR($TCS_FLATBUTTONS, $TCS_FIXEDWIDTH))
 _GUICtrlTab_SetItemSize($hTab,0,1)
 GUICtrlSetResizing($hTab, $GUI_DOCKLEFT + $GUI_DOCKTOP + $GUI_DOCKRIGHT + $GUI_DOCKBOTTOM)
-GUICtrlCreateLabel('', 255, 140, 5, $gH-165)
+GUICtrlCreateLabel("", 255, 140, 5, $gH-165)
 GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKTOP + $GUI_DOCKBOTTOM + $GUI_DOCKWIDTH)
-GUICtrlCreateLabel('', 255, $gH-35, $gW-(255+10), 5)
+GUICtrlCreateLabel("", 255, $gH-35, $gW-(255+10), 5)
 GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKRIGHT + $GUI_DOCKBOTTOM + $GUI_DOCKHEIGHT)
-GUICtrlCreateLabel('', $gW-15, 140, 5, $gH-165)
+GUICtrlCreateLabel("", $gW-15, 140, 5, $gH-165)
 GUICtrlSetResizing(-1, $GUI_DOCKTOP + $GUI_DOCKRIGHT + $GUI_DOCKBOTTOM + $GUI_DOCKWIDTH)
 	#Region	;Tab Overview
 	GUICtrlCreateTabItem(" ")
 		$lb_Tab_Overview_Alphabet = GUICtrlCreateLabel("abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ", 255, 145, $gW-(255+10), 20)
 		GUICtrlSetFont(-1, 12)
 		GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKTOP + $GUI_DOCKRIGHT + $GUI_DOCKHEIGHT)
-		$lb_Tab_Overview_Others = GUICtrlCreateLabel("1234567890.:,;'" & '"~!#@$%^&&*_ +-*/= {[()]} \|' , 255, 170, $gW-(255+10), 20)
+		$lb_Tab_Overview_Others = GUICtrlCreateLabel("1234567890.:,;"" & ""~!#@$%^&&*_ +-*/= {[()]} \|" , 255, 170, $gW-(255+10), 20)
 		GUICtrlSetFont(-1, 12)
 		GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKTOP + $GUI_DOCKRIGHT + $GUI_DOCKHEIGHT)
 
-		GUICtrlCreateLabel('', 255, 195, $gW-(255+10), 1)
+		GUICtrlCreateLabel("", 255, 195, $gW-(255+10), 1)
 		GUICtrlSetBkColor(-1, 0x000000)
 		GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKTOP + $GUI_DOCKRIGHT + $GUI_DOCKHEIGHT)
-		GUICtrlCreateLabel('', 295, 195, 1, $gH-225)
+		GUICtrlCreateLabel("", 295, 195, 1, $gH-225)
 		GUICtrlSetBkColor(-1, 0x000000)
 		GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKTOP + $GUI_DOCKBOTTOM + $GUI_DOCKWIDTH)
 
-;~ 		GUICtrlCreateLabel('', 296, 196, $gW-(255+10+40), $gH-225)
+;~ 		GUICtrlCreateLabel("", 296, 196, $gW-(255+10+40), $gH-225)
 ;~ 		GUICtrlSetBkColor(-1, 0xabcdef)
 
 		GUICtrlCreateLabel("12", 255, 196, 40, 20, BitOR($SS_CENTER, $SS_CENTERIMAGE))
@@ -336,7 +329,7 @@ GUICtrlSetResizing(-1, $GUI_DOCKTOP + $GUI_DOCKRIGHT + $GUI_DOCKBOTTOM + $GUI_DO
 		GUICtrlSetOnEvent(-1, "_TabCustomText_SetState")
 		GUICtrlSetResizing(-1, $GUI_DOCKRIGHT + $GUI_DOCKTOP + $GUI_DOCKWIDTH + $GUI_DOCKHEIGHT)
 
-		GUICtrlCreateLabel('', 760, 180, 180, 1)
+		GUICtrlCreateLabel("", 760, 180, 180, 1)
 		GUICtrlSetBkColor(-1, 0x000000)
 		GUICtrlSetResizing(-1, $GUI_DOCKRIGHT + $GUI_DOCKTOP + $GUI_DOCKWIDTH + $GUI_DOCKHEIGHT)
 
@@ -357,15 +350,15 @@ GUICtrlSetResizing(-1, $GUI_DOCKTOP + $GUI_DOCKRIGHT + $GUI_DOCKBOTTOM + $GUI_DO
 		$inp_Tab_CustomText_Size = GUICtrlSetOnEvent(-1, "_TabCustomText_SetState")
 		GUICtrlSetResizing(-1, $GUI_DOCKRIGHT + $GUI_DOCKTOP + $GUI_DOCKWIDTH + $GUI_DOCKHEIGHT)
 
-		GUICtrlCreateLabel('', 760, 220, 180, 1)
+		GUICtrlCreateLabel("", 760, 220, 180, 1)
 		GUICtrlSetBkColor(-1, 0x000000)
 		GUICtrlSetResizing(-1, $GUI_DOCKRIGHT + $GUI_DOCKTOP + $GUI_DOCKWIDTH + $GUI_DOCKHEIGHT)
 
 		GUICtrlCreateLabel("Font size:", 765, 225, 90, 30, BitOR($SS_CENTER, $SS_CENTERIMAGE))
 		GUICtrlSetFont(-1, 13)
 		GUICtrlSetResizing(-1, $GUI_DOCKRIGHT + $GUI_DOCKTOP + $GUI_DOCKWIDTH + $GUI_DOCKHEIGHT)
-		$inp_Tab_CustomText_Size = GUICtrlCreateCombo('', 865, 230, 50, 30, $CBS_DROPDOWNLIST)
-		GUICtrlSetData(-1, "8|9|10|11|12|14|16|18|20|22|24|26|28|36|48|72", '12')
+		$inp_Tab_CustomText_Size = GUICtrlCreateCombo("", 865, 230, 50, 30, $CBS_DROPDOWNLIST)
+		GUICtrlSetData(-1, "8|9|10|11|12|14|16|18|20|22|24|26|28|36|48|72", "12")
 		GUICtrlSetOnEvent(-1, "_inp_Tab_CustomText_SetStyle")
 		GUICtrlSetResizing(-1, $GUI_DOCKRIGHT + $GUI_DOCKTOP + $GUI_DOCKWIDTH + $GUI_DOCKHEIGHT)
 	#EndRegion
@@ -374,12 +367,12 @@ GUICtrlSetResizing(-1, $GUI_DOCKTOP + $GUI_DOCKRIGHT + $GUI_DOCKBOTTOM + $GUI_DO
 		Global $CharMapFrom = 33
 		Global $CharMapTo = $CharMapFrom + 129
 
-		GUICtrlCreateLabel('', 255, 140, $gW-(255+10), 30)
+		GUICtrlCreateLabel("", 255, 140, $gW-(255+10), 30)
 		GUICtrlSetStyle(-1, $GUI_DISABLE)
 		GUICtrlSetBkColor(-1, 0xFFAA48)
 		GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKTOP + $GUI_DOCKRIGHT + $GUI_DOCKHEIGHT)
 
-		GUICtrlCreateLabel('Character from', 265, 140, 100, 30, $SS_CENTERIMAGE)
+		GUICtrlCreateLabel("Character from", 265, 140, 100, 30, $SS_CENTERIMAGE)
 		GUICtrlSetFont(-1, 11, 0, 0, $DefaultFont)
 		GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKTOP + $GUI_DOCKWIDTH + $GUI_DOCKHEIGHT)
 
@@ -388,11 +381,11 @@ GUICtrlSetResizing(-1, $GUI_DOCKTOP + $GUI_DOCKRIGHT + $GUI_DOCKBOTTOM + $GUI_DO
 		GUICtrlSetFont(-1, 11, 0, 0, $DefaultFont)
 		GUICtrlSetLimit(-1, 65405, 0)
 		GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKTOP + $GUI_DOCKWIDTH + $GUI_DOCKHEIGHT)
-		GUICtrlCreateLabel('', 365, 163, 50, 2)
+		GUICtrlCreateLabel("", 365, 163, 50, 2)
 		GUICtrlSetBkColor(-1, 0x000000)
 		GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKTOP + $GUI_DOCKWIDTH + $GUI_DOCKHEIGHT)
 
-		GUICtrlCreateLabel('to', 430, 140, 20, 30, $SS_CENTERIMAGE)
+		GUICtrlCreateLabel("to", 430, 140, 20, 30, $SS_CENTERIMAGE)
 		GUICtrlSetFont(-1, 11, 0, 0, $DefaultFont)
 		GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKTOP + $GUI_DOCKWIDTH + $GUI_DOCKHEIGHT)
 
@@ -401,31 +394,31 @@ GUICtrlSetResizing(-1, $GUI_DOCKTOP + $GUI_DOCKRIGHT + $GUI_DOCKBOTTOM + $GUI_DO
 		GUICtrlSetFont(-1, 11, 0, 0, $DefaultFont)
 		GUICtrlSetLimit(-1, 65535, 130)
 		GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKTOP + $GUI_DOCKWIDTH + $GUI_DOCKHEIGHT)
-		GUICtrlCreateLabel('', 450, 163, 50, 2)
+		GUICtrlCreateLabel("", 450, 163, 50, 2)
 		GUICtrlSetBkColor(-1, 0x000000)
 		GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKTOP + $GUI_DOCKWIDTH + $GUI_DOCKHEIGHT)
 
-		GUICtrlCreateLabel('in Unicode table. {0->65535 / 0x0000->0xFFFF}', 505, 140, 300, 30, $SS_CENTERIMAGE)
+		GUICtrlCreateLabel("in Unicode table. {0->65535 | 0x0000->0xFFFF}", 505, 140, 300, 30, $SS_CENTERIMAGE)
 		GUICtrlSetFont(-1, 11, 0, 0, $DefaultFont)
 		GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKTOP + $GUI_DOCKWIDTH + $GUI_DOCKHEIGHT)
 
 		; Navigation Controls Char map
 		Global $lb_Tab_CharMap_Next130Char = GUICtrlCreateLabel(ChrW(0xf04e), $gW-40, 140, 30, 30, BitOR($SS_CENTER, $SS_CENTERIMAGE))
-		GUICtrlSetTip(-1, 'The next 130 characters')
+		GUICtrlSetTip(-1, "The next 130 characters")
 		GUICtrlSetCursor(-1, 0)
 		GUICtrlSetFont(-1, 8, 0, 0, $sFontAwesomeName, 5)
-		GUICtrlSetOnEvent(-1, '_Tab_CharMap_NavigationBarSelect')
+		GUICtrlSetOnEvent(-1, "_Tab_CharMap_NavigationBarSelect")
 		GUICtrlSetResizing(-1, $GUI_DOCKTOP + $GUI_DOCKRIGHT + $GUI_DOCKWIDTH + $GUI_DOCKHEIGHT)
 
 		Global $lb_Tab_CharMap_Prev130Char = GUICtrlCreateLabel(ChrW(0xf04a), $gW-70, 140, 30, 30, BitOR($SS_CENTER, $SS_CENTERIMAGE))
-		GUICtrlSetTip(-1, 'The previous 130 characters')
+		GUICtrlSetTip(-1, "The previous 130 characters")
 		GUICtrlSetCursor(-1, 0)
 		GUICtrlSetFont(-1, 8, 0, 0, $sFontAwesomeName, 5)
-		GUICtrlSetOnEvent(-1, '_Tab_CharMap_NavigationBarSelect')
+		GUICtrlSetOnEvent(-1, "_Tab_CharMap_NavigationBarSelect")
 		GUICtrlSetResizing(-1, $GUI_DOCKTOP + $GUI_DOCKRIGHT + $GUI_DOCKWIDTH + $GUI_DOCKHEIGHT)
 		; Navigation Controls Char map
 
-		Global $Ctrl_Tab_BackLabel = GUICtrlCreateLabel('', 255, 171, 519, 399)
+		Global $Ctrl_Tab_BackLabel = GUICtrlCreateLabel("", 255, 171, 519, 399)
 		GUICtrlSetBkColor(-1, 0x000000)
 		GUICtrlSetStyle(-1, $GUI_DISABLE)
 
@@ -437,26 +430,26 @@ GUICtrlSetResizing(-1, $GUI_DOCKTOP + $GUI_DOCKRIGHT + $GUI_DOCKBOTTOM + $GUI_DO
 				$Ctrl_Tab_CharMap[$I][$J] = GUICtrlCreateLabel(ChrW($K), 255+($J*40), 171+($I*40), 39, 39, BitOR($SS_CENTER, $SS_CENTERIMAGE))
 				GUICtrlSetBkColor(-1, 0xABCDEF)
 				GUICtrlSetFont(-1, 18, 0, 0, $CurentFontName)
-				GUICtrlSetOnEvent(-1, '_Tab_CharMap_SetCharInfo2')
+				GUICtrlSetOnEvent(-1, "_Tab_CharMap_SetCharInfo2")
 			Next
 		Next
 
 		$Ctrl_Tab_CurrentCharID = 33
-		$Ctrl_Tab_CurrentChar = GUICtrlCreateLabel('', 775, 171, 165, 165, BitOR($SS_CENTER, $SS_CENTERIMAGE))
+		$Ctrl_Tab_CurrentChar = GUICtrlCreateLabel("", 775, 171, 165, 165, BitOR($SS_CENTER, $SS_CENTERIMAGE))
 		GUICtrlSetBkColor(-1, 0x43A0FF)
 		GUICtrlSetFont(-1, 100, 0, 0, $CurentFontName, 5)
-		$Ctrl_Tab_CurrentChar_Dec = GUICtrlCreateLabel('Demical Code:', 785, 335, 155, 30, $SS_CENTERIMAGE)
-		$Ctrl_Tab_CurrentChar_Hex = GUICtrlCreateLabel('Hex Value:', 785, 365, 155, 30, $SS_CENTERIMAGE)
-		$Ctrl_Tab_CurrentChar_UNI = GUICtrlCreateLabel('Unicode:', 785, 395, 155, 30, $SS_CENTERIMAGE)
-		$Ctrl_Tab_CurrentChar_UTF8 = GUICtrlCreateLabel('UTF-8:', 785, 425, 155, 30, $SS_CENTERIMAGE)
-		$Ctrl_Tab_CurrentChar_Java = GUICtrlCreateLabel('JavaScript Escaped:', 785, 455, 155, 30, $SS_CENTERIMAGE)
-		$Ctrl_Tab_CurrentChar_HTML = GUICtrlCreateLabel('HTML Entity:', 785, 485, 155, 30, $SS_CENTERIMAGE)
+		$Ctrl_Tab_CurrentChar_Dec = GUICtrlCreateLabel("Demical Code:", 785, 335, 155, 30, $SS_CENTERIMAGE)
+		$Ctrl_Tab_CurrentChar_Hex = GUICtrlCreateLabel("Hex Value:", 785, 365, 155, 30, $SS_CENTERIMAGE)
+		$Ctrl_Tab_CurrentChar_UNI = GUICtrlCreateLabel("Unicode:", 785, 395, 155, 30, $SS_CENTERIMAGE)
+		$Ctrl_Tab_CurrentChar_UTF8 = GUICtrlCreateLabel("UTF-8:", 785, 425, 155, 30, $SS_CENTERIMAGE)
+		$Ctrl_Tab_CurrentChar_Java = GUICtrlCreateLabel("JavaScript Escaped:", 785, 455, 155, 30, $SS_CENTERIMAGE)
+		$Ctrl_Tab_CurrentChar_HTML = GUICtrlCreateLabel("HTML Entity:", 785, 485, 155, 30, $SS_CENTERIMAGE)
 
-		$Ctrl_Tab_CharMap_Edit = GUICtrlCreateInput('', 775, 525, 165, 20)
-		Global $Ctrl_Tab_CharMap_Copy = GUICtrlCreateLabel('Copy', 775, 550, 165, 20, BitOR($SS_CENTER, $SS_CENTERIMAGE))
+		$Ctrl_Tab_CharMap_Edit = GUICtrlCreateInput("", 775, 525, 165, 20)
+		Global $Ctrl_Tab_CharMap_Copy = GUICtrlCreateLabel("Copy", 775, 550, 165, 20, BitOR($SS_CENTER, $SS_CENTERIMAGE))
 		GUICtrlSetCursor(-1, 0)
 		GUICtrlSetBkColor(-1, 0x43A0FF)
-		GUICtrlSetOnEvent(-1, '_Tab_CharMap_btCopy')
+		GUICtrlSetOnEvent(-1, "_Tab_CharMap_btCopy")
 	#EndRegion
 	#Region	;Tab More Info
 	GUICtrlCreateTabItem(" ");More Info
@@ -471,7 +464,7 @@ GUICtrlSetResizing(-1, $GUI_DOCKTOP + $GUI_DOCKRIGHT + $GUI_DOCKBOTTOM + $GUI_DO
 		GUICtrlSetFont(-1, 25, 0, 0, $sFontAwesomeName, 5)
 		GUICtrlSetOnEvent(-1, "_CopyFontInfo")
 		GUICtrlSetResizing(-1, $GUI_DOCKRIGHT + $GUI_DOCKTOP + $GUI_DOCKWIDTH + $GUI_DOCKHEIGHT)
-		GUICtrlCreateLabel('Copy all info', 760, 185, 180, 40, BitOR($SS_CENTER, $SS_CENTERIMAGE))
+		GUICtrlCreateLabel("Copy all info", 760, 185, 180, 40, BitOR($SS_CENTER, $SS_CENTERIMAGE))
 		GUICtrlSetColor(-1, 0xFFFFFF)
 		GUICtrlSetBkColor(-1, 0x4D4D4D)
 		GUICtrlSetCursor(-1, 0)
@@ -496,7 +489,7 @@ GUICtrlSetResizing(-1, $GUI_DOCKTOP + $GUI_DOCKRIGHT + $GUI_DOCKBOTTOM + $GUI_DO
 	#EndRegion
 #EndRegion	;Create Tab Controls
 $CurentFontPath = _GetCmdLine()
-If StringInStr($CurentFontPath, '/install') Then
+If StringInStr($CurentFontPath, "\install") Then
 	StringTrimLeft($CurentFontPath, 9)
 	_InstallFont()
 EndIf
@@ -505,7 +498,7 @@ If StringInStr($TypeFont, _GetFileType($CurentFontPath)) <> 0 Then
 Else
 	_ViewFile()
 EndIf
-WinSetTrans($hGUI, '', 0)
+WinSetTrans($hGUI, "", 0)
 GUISetState()
 _ShowForm()
 _GUICtrlTVExplorer_Expand($hTV, $CurentFontPath)
@@ -516,10 +509,10 @@ _GUICtrlTVExplorer_Expand($hTV, $CurentFontPath)
 #Region 	; Reduce Memory Register
 AdlibRegister(_ReduceMemory, 500)
 Func _ReduceMemory()
-    Local $ai_GetCurrentProcessId = DllCall('kernel32.dll', 'int', 'GetCurrentProcessId')
-    Local $ai_Handle = DllCall("kernel32.dll", 'int', 'OpenProcess', 'int', 0x1f0fff, 'int', False, 'int', $ai_GetCurrentProcessId[0])
-    Local $ai_Return = DllCall("psapi.dll", 'int', 'EmptyWorkingSet', 'long', $ai_Handle[0])
-    DllCall('kernel32.dll', 'int', 'CloseHandle', 'int', $ai_Handle[0])
+    Local $ai_GetCurrentProcessId = DllCall("kernel32.dll", "int", "GetCurrentProcessId")
+    Local $ai_Handle = DllCall("kernel32.dll", "int", "OpenProcess", "int", 0x1f0fff, "int", False, "int", $ai_GetCurrentProcessId[0])
+    Local $ai_Return = DllCall("psapi.dll", "int", "EmptyWorkingSet", "long", $ai_Handle[0])
+    DllCall("kernel32.dll", "int", "CloseHandle", "int", $ai_Handle[0])
     Return $ai_Return[0]
 EndFunc
 #EndRegion
@@ -600,20 +593,20 @@ EndFunc   ;==>_TVRefresh
 
 Func _FormMove()
 	If ($GUIState==@SW_SHOWNORMAL) Then
-		DllCall('user32.dll', 'int', 'SendMessage', 'HWND', $hGUI, 'int', 0x0112, 'int', 0xF012, 'int', 0)
+		DllCall("user32.dll", "int", "SendMessage", "HWND", $hGUI, "int", 0x0112, "int", 0xF012, "int", 0)
 	EndIf
 EndFunc		;Moving Form
 Func _ShowForm()
 	Local $I
 	For $I = 0 To 255 Step +15
-		WinSetTrans($hGUI,'', $I)
+		WinSetTrans($hGUI,"", $I)
 		Sleep(10)
 	Next
 EndFunc
 Func _HideForm()
 	Local $I
 	For $I = 255 To 0 Step -15
-		WinSetTrans($hGUI,'', $I)
+		WinSetTrans($hGUI,"", $I)
 		Sleep(10)
 	Next
 EndFunc
@@ -631,57 +624,57 @@ EndFunc
 Func _Maximize()
 	Local $TaskBarSize = WinGetPos("[CLASS:Shell_TrayWnd]")
 	Local $I, $J
-	If $CurentTab == $lb_Tab_Chrmap Then WinSetTrans($hGUI, '', 0)	;Hide GUI to hide unwanted efect
+	If $CurentTab == $lb_Tab_Chrmap Then WinSetTrans($hGUI, "", 0)	;Hide GUI to hide unwanted efect
 	If $GUIState == @SW_SHOWNORMAL Then
-		WinMove($hGUI, '', 0, 0, @DesktopWidth - $TaskBarSize[0], $TaskBarSize[1])
+		WinMove($hGUI, "", 0, 0, @DesktopWidth - $TaskBarSize[0], $TaskBarSize[1])
 		If $CharMapCtrlSize == 0 Then
 			$CharMapCtrlSize = _GetCharMapControlPos()
 			$CharMapCtrlTop = $CharMapCtrlSize[0]
 			$CharMapCtrlSize = $CharMapCtrlSize[1]
 		EndIf
-		ControlMove($hGUI, '', $Ctrl_Tab_BackLabel, 255, 177, $CharMapCtrlSize*13-1, $CharMapCtrlSize*10-1)
+		ControlMove($hGUI, "", $Ctrl_Tab_BackLabel, 255, 177, $CharMapCtrlSize*13-1, $CharMapCtrlSize*10-1)
 		;Move Controls
 		For $I = 0 To 9
 			For $J = 0 To 12
-				ControlMove($hGUI, '',$Ctrl_Tab_CharMap[$I][$J], 255+($J*$CharMapCtrlSize), 177+($I*$CharMapCtrlSize), $CharMapCtrlSize-1, $CharMapCtrlSize-1)
+				ControlMove($hGUI, "",$Ctrl_Tab_CharMap[$I][$J], 255+($J*$CharMapCtrlSize), 177+($I*$CharMapCtrlSize), $CharMapCtrlSize-1, $CharMapCtrlSize-1)
 			Next
 		Next
 		$I = 255+(13*$CharMapCtrlSize)+Int((@DesktopWidth-255-10-(13*$CharMapCtrlSize))/2-100)
-		ControlMove($hGUI, '', $Ctrl_Tab_CurrentChar, $I, 177, 200, 200)
-		ControlMove($hGUI, '', $Ctrl_Tab_CurrentChar_Dec, $I, 397, 200, 30)
-		ControlMove($hGUI, '', $Ctrl_Tab_CurrentChar_Hex, $I, 427, 200, 30)
-		ControlMove($hGUI, '', $Ctrl_Tab_CurrentChar_UNI, $I, 457, 200, 30)
-		ControlMove($hGUI, '', $Ctrl_Tab_CurrentChar_UTF8, $I, 487, 200, 30)
-		ControlMove($hGUI, '', $Ctrl_Tab_CurrentChar_Java, $I, 517, 200, 30)
-		ControlMove($hGUI, '', $Ctrl_Tab_CurrentChar_HTML, $I, 547, 200, 30)
+		ControlMove($hGUI, "", $Ctrl_Tab_CurrentChar, $I, 177, 200, 200)
+		ControlMove($hGUI, "", $Ctrl_Tab_CurrentChar_Dec, $I, 397, 200, 30)
+		ControlMove($hGUI, "", $Ctrl_Tab_CurrentChar_Hex, $I, 427, 200, 30)
+		ControlMove($hGUI, "", $Ctrl_Tab_CurrentChar_UNI, $I, 457, 200, 30)
+		ControlMove($hGUI, "", $Ctrl_Tab_CurrentChar_UTF8, $I, 487, 200, 30)
+		ControlMove($hGUI, "", $Ctrl_Tab_CurrentChar_Java, $I, 517, 200, 30)
+		ControlMove($hGUI, "", $Ctrl_Tab_CurrentChar_HTML, $I, 547, 200, 30)
 		$I = 255+(13*$CharMapCtrlSize)+Int((@DesktopWidth-255-10-(13*$CharMapCtrlSize))/2-150)
 		$J = 177+(9*$CharMapCtrlSize)+($CharMapCtrlSize-30)
-		ControlMove($hGUI, '', $Ctrl_Tab_CharMap_Edit, $I, $J-30, 300, 20)
-		ControlMove($hGUI, '', $Ctrl_Tab_CharMap_Copy, $I, $J, 300, 30)
+		ControlMove($hGUI, "", $Ctrl_Tab_CharMap_Edit, $I, $J-30, 300, 20)
+		ControlMove($hGUI, "", $Ctrl_Tab_CharMap_Copy, $I, $J, 300, 30)
 		_WinAPI_RedrawWindow($hGUI)
 		$GUIState = @SW_MAXIMIZE
 	ElseIf $GUIState == @SW_MAXIMIZE Then
-		WinMove($hGUI, '', (@DesktopWidth - $gW) /2, (@DesktopHeight-$gH)/2, $gW, $gH)
-		ControlMove($hGUI, '', $Ctrl_Tab_BackLabel, 255, 171, 519, 399)
+		WinMove($hGUI, "", (@DesktopWidth - $gW) /2, (@DesktopHeight-$gH)/2, $gW, $gH)
+		ControlMove($hGUI, "", $Ctrl_Tab_BackLabel, 255, 171, 519, 399)
 		;Move Controls
 		For $I = 0 To 9
 			For $J = 0 To 12
-				ControlMove($hGUI, '',$Ctrl_Tab_CharMap[$I][$J], 255+($J*40), 171+($I*40), 39, 39)
+				ControlMove($hGUI, "",$Ctrl_Tab_CharMap[$I][$J], 255+($J*40), 171+($I*40), 39, 39)
 			Next
 		Next
-		ControlMove($hGUI, '', $Ctrl_Tab_CurrentChar, 775, 171, 165, 165)
-		ControlMove($hGUI, '', $Ctrl_Tab_CurrentChar_Dec, 785, 335, 155, 30)
-		ControlMove($hGUI, '', $Ctrl_Tab_CurrentChar_Hex, 785, 365, 155, 30)
-		ControlMove($hGUI, '', $Ctrl_Tab_CurrentChar_UNI, 785, 395, 155, 30)
-		ControlMove($hGUI, '', $Ctrl_Tab_CurrentChar_UTF8, 785, 425, 155, 30)
-		ControlMove($hGUI, '', $Ctrl_Tab_CurrentChar_Java, 785, 455, 155, 30)
-		ControlMove($hGUI, '', $Ctrl_Tab_CurrentChar_HTML, 785, 485, 155, 30)
-		ControlMove($hGUI, '', $Ctrl_Tab_CharMap_Edit, 775, 525, 165, 20)
-		ControlMove($hGUI, '', $Ctrl_Tab_CharMap_Copy, 775, 550, 165, 20)
+		ControlMove($hGUI, "", $Ctrl_Tab_CurrentChar, 775, 171, 165, 165)
+		ControlMove($hGUI, "", $Ctrl_Tab_CurrentChar_Dec, 785, 335, 155, 30)
+		ControlMove($hGUI, "", $Ctrl_Tab_CurrentChar_Hex, 785, 365, 155, 30)
+		ControlMove($hGUI, "", $Ctrl_Tab_CurrentChar_UNI, 785, 395, 155, 30)
+		ControlMove($hGUI, "", $Ctrl_Tab_CurrentChar_UTF8, 785, 425, 155, 30)
+		ControlMove($hGUI, "", $Ctrl_Tab_CurrentChar_Java, 785, 455, 155, 30)
+		ControlMove($hGUI, "", $Ctrl_Tab_CurrentChar_HTML, 785, 485, 155, 30)
+		ControlMove($hGUI, "", $Ctrl_Tab_CharMap_Edit, 775, 525, 165, 20)
+		ControlMove($hGUI, "", $Ctrl_Tab_CharMap_Copy, 775, 550, 165, 20)
 		_WinAPI_RedrawWindow($hGUI)
 		$GUIState = @SW_SHOWNORMAL
 	EndIf
-	If $CurentTab == $lb_Tab_Chrmap Then WinSetTrans($hGUI, '', 255)
+	If $CurentTab == $lb_Tab_Chrmap Then WinSetTrans($hGUI, "", 255)
 EndFunc
 Func _Minimize()
 	_HideForm()
@@ -689,10 +682,10 @@ Func _Minimize()
 EndFunc
 
 Func _ShowHelp()
-	If Not FileExists(@ScriptDir & '\Helper.exe') Then
-		MsgBox(16, 'Error', 'Something went wrong! Reinstall this product to fix this error!')
+	If Not FileExists(@ScriptDir & "\Helper.exe") Then
+		MsgBox(16, "Error", "Something went wrong! Reinstall this product to fix this error!")
 	Else
-		ShellExecute(@ScriptDir & '\Helper.exe')
+		ShellExecute(@ScriptDir & "\Helper.exe")
 		_HideForm()
 		WinWaitActive("KyTs Font Viewer Helper")
 		WinWaitClose("KyTs Font Viewer Helper")
@@ -701,7 +694,7 @@ Func _ShowHelp()
 EndFunc
 
 Func _GoToHomePage()
-	ShellExecute('http://kytstech.blogspot.com')
+	ShellExecute("http://kytstech.blogspot.com")
 EndFunc
 
 Func _GDIPlus_CreatePic($FileName, $Left, $Top, $Width, $Heigth)
@@ -711,13 +704,13 @@ Func _GDIPlus_CreatePic($FileName, $Left, $Top, $Width, $Heigth)
 		$iHeight = _GDIPlus_ImageGetHeight($hImage)
 		$hGDIBitmap = _GDIPlus_BitmapCreateHBITMAPFromBitmap($hImage)
 		_GDIPlus_ImageDispose($hImage)
-	$hPicCtrl = GUICtrlCreateLabel('', $Left, $Top, $Width, $Heigth, $SS_BITMAP)
+	$hPicCtrl = GUICtrlCreateLabel("", $Left, $Top, $Width, $Heigth, $SS_BITMAP)
 	_WinAPI_DeleteObject(GUICtrlSendMsg($hPicCtrl, 0x0172, $IMAGE_BITMAP, $hGDIBitmap)) ;$STM_SETIMAGE = 0x0172
     _WinAPI_DeleteObject($hGDIBitmap)
 	Return $hPicCtrl
-EndFunc			;~	Using GDIPlus to create Picture control, shouldn't create many control with this and project use GDIPlus
+EndFunc			;~	Using GDIPlus to create Picture control, shouldn"t create many control with this and project use GDIPlus
 
-Func _ViewFile($sPath = @WindowsDir & '\Fonts\arial.ttf', $_IsDBClick = 0)
+Func _ViewFile($sPath = @WindowsDir & "\Fonts\arial.ttf", $_IsDBClick = 0)
 	Local $FileType = StringUpper(StringRight($sPath, 3))
 
 	If (StringInStr($TypeFont, $FileType)==0) And ($_IsDBClick==1) Then
@@ -752,45 +745,45 @@ Func _ViewFont($sPath)
 	_Tab_CharMap_SetCharInfo()
 EndFunc
 Func _FontGetInfoFromFile($sPath)
-	Local $sFontInfo, $sInfo = ''
-	$sFontInfo  = "File name" & @TAB & @TAB & @TAB & ':' & @TAB & _GetFileName($CurentFontPath) & @CRLF
-	$sFontInfo &= "Location" & @TAB & @TAB & @TAB & ':' & @TAB & _GetFilePath($CurentFontPath) & @CRLF
+	Local $sFontInfo, $sInfo = ""
+	$sFontInfo  = "File name" & @TAB & @TAB & @TAB & ":" & @TAB & _GetFileName($CurentFontPath) & @CRLF
+	$sFontInfo &= "Location" & @TAB & @TAB & @TAB & ":" & @TAB & _GetFilePath($CurentFontPath) & @CRLF
 	$sInfo = _WinAPI_GetFontResourceInfo($sPath, Default, 0)
-	If Not @error And $sInfo Then $sFontInfo &= "Copyright" & @TAB & @TAB & @TAB & ':' & @TAB & $sInfo & @CRLF
+	If Not @error And $sInfo Then $sFontInfo &= "Copyright" & @TAB & @TAB & @TAB & ":" & @TAB & $sInfo & @CRLF
 	$sInfo = _WinAPI_GetFontResourceInfo($sPath, Default, 1)
-	If Not @error And $sInfo Then $sFontInfo &= "Font Family name" & @TAB & @TAB & ':' & @TAB & $sInfo & @CRLF
+	If Not @error And $sInfo Then $sFontInfo &= "Font Family name" & @TAB & @TAB & ":" & @TAB & $sInfo & @CRLF
 	$sInfo = _WinAPI_GetFontResourceInfo($sPath, Default, 2)
-	If Not @error And $sInfo Then $sFontInfo &= "Font SubFamily name" & @TAB & ':' & @TAB & $sInfo & @CRLF
+	If Not @error And $sInfo Then $sFontInfo &= "Font SubFamily name" & @TAB & ":" & @TAB & $sInfo & @CRLF
 	$sInfo = _WinAPI_GetFontResourceInfo($sPath, Default, 3)
-	If Not @error And $sInfo Then $sFontInfo &= "Unique font identifier" & @TAB & ':' & @TAB & $sInfo & @CRLF
+	If Not @error And $sInfo Then $sFontInfo &= "Unique font identifier" & @TAB & ":" & @TAB & $sInfo & @CRLF
 	$sInfo = _WinAPI_GetFontResourceInfo($sPath, Default, 4)
-	If Not @error And $sInfo Then $sFontInfo &= "Font full name" & @TAB & @TAB & ':' & @TAB & $sInfo & @CRLF
+	If Not @error And $sInfo Then $sFontInfo &= "Font full name" & @TAB & @TAB & ":" & @TAB & $sInfo & @CRLF
 	$sInfo = _WinAPI_GetFontResourceInfo($sPath, Default, 5)
-	If Not @error And $sInfo Then $sFontInfo &= "Version string" & @TAB & @TAB & ':' & @TAB & $sInfo & @CRLF
+	If Not @error And $sInfo Then $sFontInfo &= "Version string" & @TAB & @TAB & ":" & @TAB & $sInfo & @CRLF
 	$sInfo = _WinAPI_GetFontResourceInfo($sPath, Default, 6)
-	If Not @error And $sInfo Then $sFontInfo &= "Postscript name" & @TAB & @TAB & ':' & @TAB & $sInfo & @CRLF
+	If Not @error And $sInfo Then $sFontInfo &= "Postscript name" & @TAB & @TAB & ":" & @TAB & $sInfo & @CRLF
 	$sInfo = _WinAPI_GetFontResourceInfo($sPath, Default, 7)
-	If Not @error And $sInfo Then $sFontInfo &= "Trademark" & @TAB & @TAB & ':' & @TAB & $sInfo & @CRLF
+	If Not @error And $sInfo Then $sFontInfo &= "Trademark" & @TAB & @TAB & ":" & @TAB & $sInfo & @CRLF
 	$sInfo = _WinAPI_GetFontResourceInfo($sPath, Default, 8)
-	If Not @error And $sInfo Then $sFontInfo &= "Manufacturer Name" & @TAB & @TAB & ':' & @TAB & $sInfo & @CRLF
+	If Not @error And $sInfo Then $sFontInfo &= "Manufacturer Name" & @TAB & @TAB & ":" & @TAB & $sInfo & @CRLF
 	$sInfo = _WinAPI_GetFontResourceInfo($sPath, Default, 9)
-	If Not @error And $sInfo Then $sFontInfo &= "Designer" & @TAB & @TAB & @TAB & ':' & @TAB & $sInfo & @CRLF
+	If Not @error And $sInfo Then $sFontInfo &= "Designer" & @TAB & @TAB & @TAB & ":" & @TAB & $sInfo & @CRLF
 	$sInfo = _WinAPI_GetFontResourceInfo($sPath, Default, 10)
-	If Not @error And $sInfo Then $sFontInfo &= "Description" & @TAB & @TAB & ':' & @TAB & $sInfo & @CRLF
+	If Not @error And $sInfo Then $sFontInfo &= "Description" & @TAB & @TAB & ":" & @TAB & $sInfo & @CRLF
 	$sInfo = _WinAPI_GetFontResourceInfo($sPath, Default, 11)
-	If Not @error And $sInfo Then $sFontInfo &= "URL Vendor" & @TAB & @TAB & ':' & @TAB & $sInfo & @CRLF
+	If Not @error And $sInfo Then $sFontInfo &= "URL Vendor" & @TAB & @TAB & ":" & @TAB & $sInfo & @CRLF
 	$sInfo = _WinAPI_GetFontResourceInfo($sPath, Default, 16)
-	If Not @error And $sInfo Then $sFontInfo &= "Preferred Family (Windows only)" & @TAB & ':' & @TAB & $sInfo & @CRLF
+	If Not @error And $sInfo Then $sFontInfo &= "Preferred Family (Windows only)" & @TAB & ":" & @TAB & $sInfo & @CRLF
 	$sInfo = _WinAPI_GetFontResourceInfo($sPath, Default, 17)
-	If Not @error And $sInfo Then $sFontInfo &= "Preferred SubFamily (Windows only)" & @TAB & ':' & @TAB & $sInfo & @CRLF
+	If Not @error And $sInfo Then $sFontInfo &= "Preferred SubFamily (Windows only)" & @TAB & ":" & @TAB & $sInfo & @CRLF
 	$sInfo = _WinAPI_GetFontResourceInfo($sPath, Default, 18)
-	If Not @error And $sInfo Then $sFontInfo &= "Compatible Full (Mac OS only)" & @TAB & ':' & @TAB & $sInfo & @CRLF
+	If Not @error And $sInfo Then $sFontInfo &= "Compatible Full (Mac OS only)" & @TAB & ":" & @TAB & $sInfo & @CRLF
 	$sInfo = _WinAPI_GetFontResourceInfo($sPath, Default, 19)
-	If Not @error And $sInfo Then $sFontInfo &= "Sample text" & @TAB & @TAB & ':' & @TAB & $sInfo & @CRLF
+	If Not @error And $sInfo Then $sFontInfo &= "Sample text" & @TAB & @TAB & ":" & @TAB & $sInfo & @CRLF
 	$sInfo = _WinAPI_GetFontResourceInfo($sPath, Default, 20)
-	If Not @error And $sInfo Then $sFontInfo &= "PostScript CID findfont name" & @TAB & ':' & @TAB & $sInfo & @CRLF
+	If Not @error And $sInfo Then $sFontInfo &= "PostScript CID findfont name" & @TAB & ":" & @TAB & $sInfo & @CRLF
 	$sInfo = _WinAPI_GetFontResourceInfo($sPath, Default, 256)
-	If Not @error And $sInfo Then $sFontInfo &= "PostScript CID findfont name" & @TAB & ':' & @TAB & $sInfo & @CRLF
+	If Not @error And $sInfo Then $sFontInfo &= "PostScript CID findfont name" & @TAB & ":" & @TAB & $sInfo & @CRLF
 
 	Return $sFontInfo
 EndFunc
@@ -805,16 +798,16 @@ Func _GetBorderType($hUnder)
     If $aCurInfo[1] > $aWinPos[3] - $iMargin Then $iTopBot = 6
     Return $iSide + $iTopBot
 EndFunc   ;==>_GetBorderType
-Func _GetFileName($sPath = '')
-	If $sPath <> '' Then
-		Local $I = StringLen($sPath), $Name = ''
-		While ($I >= 1) And (StringMid($sPath, $I, 1) <> '\')
+Func _GetFileName($sPath = "")
+	If $sPath <> "" Then
+		Local $I = StringLen($sPath), $Name = ""
+		While ($I >= 1) And (StringMid($sPath, $I, 1) <> "\")
 			$Name = StringMid($sPath, $I, 1) & $Name
 			$I -= 1
 		WEnd
 		Return $Name
 	EndIf
-	Return ''
+	Return ""
 EndFunc   ;==>GetNameOfDir
 Func _GetFilePath($sPath)
 	Return StringLeft($sPath, StringLen($sPath)-StringLen(_GetFileName($sPath))-1)
@@ -825,14 +818,14 @@ EndFunc
 Func _NavigationBarSelect()
 	Local $CtrlID = @GUI_CtrlId, $FileList, $GotoFile
 	Local $FontPath = _GetFilePath($CurentFontPath)
-	$FileList = _FileListToArrayRec($FontPath, '*.FON;*.FNT;*.TTF;*.TTC;*.FOT;*.OTF;*.MMM;*.PFB;*.PFM', $FLTAR_FILES, $FLTAR_NORECUR, $FLTAR_SORT, $FLTAR_FULLPATH)
+	$FileList = _FileListToArrayRec($FontPath, "*.FON;*.FNT;*.TTF;*.TTC;*.FOT;*.OTF;*.MMM;*.PFB;*.PFM", $FLTAR_FILES, $FLTAR_NORECUR, $FLTAR_SORT, $FLTAR_FULLPATH)
 	Switch $CtrlID
 		Case $lb_InstallFont
-			If (StringUpper(_GetFilePath($CurentFontPath)) <> StringUpper(@WindowsDir & '\Fonts')) Or _
-			(Not FileExists(@WindowsDir & '\Fonts\' & _GetFileName($CurentFontPath))) Then
+			If (StringUpper(_GetFilePath($CurentFontPath)) <> StringUpper(@WindowsDir & "\Fonts")) Or _
+			(Not FileExists(@WindowsDir & "\Fonts\" & _GetFileName($CurentFontPath))) Then
 				_InstallFont($CurentFontPath)
 			Else
-				Msgbox(16,'Message','This font is already installed!', 0, $hGUI)
+				Msgbox(16,"Message","This font is already installed!", 0, $hGUI)
 			EndIf
 		Case $lb_DeleteFont
 			$GotoFile = _GotoFile($FileList) ;Goto next font
@@ -842,7 +835,7 @@ Func _NavigationBarSelect()
 				_GUICtrlTVExplorer_Expand($hTV, $GotoFile, 0)
 				_ViewFile($GotoFile)
 			Else
-				Msgbox(48,'Notice','Delete file: ' & $CurentFontPath & @CRLF & 'and open file: ' & $GotoFile, 0, $hGUI) ;Debug only
+				Msgbox(48,"Notice","Delete file: " & $CurentFontPath & @CRLF & "and open file: " & $GotoFile, 0, $hGUI) ;Debug only
 				_ViewFile($GotoFile)
 			EndIf
 			_TVRefresh()
@@ -883,7 +876,7 @@ Func _GotoFile($aFileList, $iFlag = 0)
 EndFunc
 Func _GetCmdLine()
 	Local $Cmd
-	If (StringLeft($CmdLineRaw,1)=='"') And (StringRight($CmdLineRaw,1)=='"') Then
+	If (StringLeft($CmdLineRaw,1)==""") And (StringRight($CmdLineRaw,1)==""") Then
 		$Cmd = StringTrimLeft($CmdLineRaw, 1)
 		$Cmd = StringTrimRight($Cmd, 1)
 		Return $Cmd
@@ -896,7 +889,7 @@ Func _RunAsAdmin($CommandLine)
 		If @Compiled Then
 			ShellExecute(@ScriptFullPath, $CommandLine, @WorkingDir, "RunAs")
 		Else
-			ShellExecute(@AutoItExe, '/AutoIt3ExecuteScript "' & @ScriptFullPath & '" ' & $CommandLine, @WorkingDir, "runas")
+			ShellExecute(@AutoItExe, "\AutoIt3ExecuteScript "" & @ScriptFullPath & "" " & $CommandLine, @WorkingDir, "runas")
 		EndIf
 		Exit
 	EndIf
@@ -932,13 +925,13 @@ Func _InstallFont($sSourceFile = $CurentFontPath, $sFontDescript="", $sFontsPath
                 $sFontDescript, "REG_SZ", $sFontsPath & "\" & $sFontName)
         EndIf
     WEnd
-	If Not @error Then Msgbox(64,'Message','Install Successfuly!', 0, $hGUI)
+	If Not @error Then Msgbox(64,"Message","Install Successfuly!", 0, $hGUI)
     DllClose($hGdi32_DllOpen)
     DllCall("user32.dll", "Int", "SendMessage", "hwnd", $HWND_BROADCAST, "int", $WM_FONTCHANGE, "int", 0, "int", 0)
     Return 1
 EndFunc
 Func _OpenFileDialog()
-	Local $hFile = FileOpenDialog('Sellect Font Files!', _GetFilePath($CurentFontPath), 'Font Files(*.FON;*.FNT;*.TTF;*.TTC;*.FOT;*.OTF;*.MMM;*.PFB;*.PFM)|All files (*.*)', $FD_FILEMUSTEXIST, '', $hGUI)
+	Local $hFile = FileOpenDialog("Sellect Font Files!", _GetFilePath($CurentFontPath), "Font Files(*.FON;*.FNT;*.TTF;*.TTC;*.FOT;*.OTF;*.MMM;*.PFB;*.PFM)|All files (*.*)", $FD_FILEMUSTEXIST, "", $hGUI)
 	If Not @error Then
 		_TVSetPath($TV_Input, $hFile)
 		_GUICtrlTVExplorer_Expand($hTV, $hFile)
@@ -976,11 +969,11 @@ Func _Tab_CharMap_NavigationBarSelect()
 EndFunc
 Func _Tab_CharMap_btCopy()
 	Local $Clip_Temp = GUICtrlRead($Ctrl_Tab_CharMap_Edit)
-	If $Clip_Temp == '' Then
-		MsgBox(16, $Tile & ' Error!', 'No data to copy to Clipboard!', 0, $hGUI)
+	If $Clip_Temp == "" Then
+		MsgBox(16, $Tile & " Error!", "No data to copy to Clipboard!", 0, $hGUI)
 	Else
 		ClipPut($Clip_Temp)
-		MsgBox(64, $Tile & ' Copied!', 'Copied: '&GUICtrlRead($Ctrl_Tab_CharMap_Edit)&' to Clipboard!', 0, $hGUI)
+		MsgBox(64, $Tile & " Copied!", "Copied: "&GUICtrlRead($Ctrl_Tab_CharMap_Edit)&" to Clipboard!", 0, $hGUI)
 	EndIf
 EndFunc
 Func _Tab_CharMap_SetFont()		; Hàm này để đặt lại font tất các control trong tab CharMap và đặt lại ký tự trong control $Ctrl_Tab_CurrentChar
@@ -1018,21 +1011,21 @@ Func _Tab_CharMap_SetCharInfo($CtrlID = 1)	; Hàm đặt lại ký tự và các
 		$Ctrl_Tab_CurrentCharID = $CharID
 		Local $CharID_Hex = _Hex($CharID)
 		GUICtrlSetData($Ctrl_Tab_CurrentChar, ChrW($CharID))
-		GUICtrlSetData($Ctrl_Tab_CurrentChar_Dec, 'Demical Code:' & @TAB & $CharID)
-		GUICtrlSetData($Ctrl_Tab_CurrentChar_Hex, 'Hex Value:' & @TAB & $CharID_Hex)
-		GUICtrlSetData($Ctrl_Tab_CurrentChar_UNI, 'Unicode:' & @TAB & 'U+' & $CharID_Hex)
-		GUICtrlSetData($Ctrl_Tab_CurrentChar_UTF8, 'UTF-8:' & @TAB  & @TAB & '0x' & $CharID_Hex)
-		GUICtrlSetData($Ctrl_Tab_CurrentChar_Java, 'JavaScript Escaped:  ' & '%u' & $CharID_Hex)
-		GUICtrlSetData($Ctrl_Tab_CurrentChar_HTML, 'HTML Entity:' & @TAB & '&&#' & $CharID)
+		GUICtrlSetData($Ctrl_Tab_CurrentChar_Dec, "Demical Code:" & @TAB & $CharID)
+		GUICtrlSetData($Ctrl_Tab_CurrentChar_Hex, "Hex Value:" & @TAB & $CharID_Hex)
+		GUICtrlSetData($Ctrl_Tab_CurrentChar_UNI, "Unicode:" & @TAB & "U+" & $CharID_Hex)
+		GUICtrlSetData($Ctrl_Tab_CurrentChar_UTF8, "UTF-8:" & @TAB  & @TAB & "0x" & $CharID_Hex)
+		GUICtrlSetData($Ctrl_Tab_CurrentChar_Java, "JavaScript Escaped:  " & "%u" & $CharID_Hex)
+		GUICtrlSetData($Ctrl_Tab_CurrentChar_HTML, "HTML Entity:" & @TAB & "&&#" & $CharID)
 	EndIf
 EndFunc
 Func _Tab_CharMap_SetCharInfo2()	; Là hàm phụ của _Tab_CharMap_SetCharInfo()
 	_Tab_CharMap_SetCharInfo(0)
 EndFunc
 Func _Hex($iDec)
-	Local $iHex = Hex($iDec), $iHex2 = '', $I
+	Local $iHex = Hex($iDec), $iHex2 = "", $I
 	For $I=1 To StringLen($iHex)
-		If StringMid($iHex, $I, 1) <> '0' Then $iHex2 &= StringMid($iHex, $I, 1)
+		If StringMid($iHex, $I, 1) <> "0" Then $iHex2 &= StringMid($iHex, $I, 1)
 	Next
 	Return $iHex2
 EndFunc
@@ -1088,7 +1081,7 @@ EndFunc
 Func _GetCharMapControlPos()
 	Local $iTop, $iBot, $iSize, $aReturn[2]
 	$iTop = 170
-	$iBot = ControlGetPos($hGUI, '', $lb_StatusBar)[1] - 5
+	$iBot = ControlGetPos($hGUI, "", $lb_StatusBar)[1] - 5
 	$iSize = Int(($iBot-$iTop)/10)
 	$iTop = $iBot-$iTop-$iSize*10
 	$aReturn[0] = $iTop
@@ -1104,10 +1097,10 @@ Func _TabChange()
 	GUICtrlSetBkColor($CurentTab, 0x1C8BFF)
 EndFunc
 Func _GotoAndCopy()
-	If $CurentFontPath <> '' Then
+	If $CurentFontPath <> "" Then
 		Local $sPath = _GetFilePath($CurentFontPath)
 		ClipPut($sPath)
-		If StringUpper($sPath) == StringUpper(@WindowsDir & '\Fonts') Then
+		If StringUpper($sPath) == StringUpper(@WindowsDir & "\Fonts") Then
 			ShellExecute($sPath)
 		Else
 			Run("explorer.exe /n,/e,/select, " & $CurentFontPath)
@@ -1116,13 +1109,13 @@ Func _GotoAndCopy()
 EndFunc
 Func _CopyFontInfo()
 	ClipPut(GUICtrlRead($inp_Tab_MoreInfo))
-	Msgbox(64,$Tile & 'Font info!','Copied to Clipboard!', 0, $hGUI)
+	Msgbox(64,$Tile & "Font info!","Copied to Clipboard!", 0, $hGUI)
 EndFunc
 Func _SearchGoogleFont()
 	Local $sFontName = _WinAPI_GetFontResourceInfo($CurentFontPath, Default, 1)
-	If $sFontName == '' Then $sFontName = _WinAPI_GetFontResourceInfo($CurentFontPath, Default, 4) & ' ' & _GetFileName($CurentFontPath)
+	If $sFontName == "" Then $sFontName = _WinAPI_GetFontResourceInfo($CurentFontPath, Default, 4) & " " & _GetFileName($CurentFontPath)
 	Local $sFontSubName = _WinAPI_GetFontResourceInfo($CurentFontPath, Default, 2)
-	Local $sKeyWord = "Font " & $sFontName & ' ' & $sFontSubName
+	Local $sKeyWord = "Font " & $sFontName & " " & $sFontSubName
 	ShellExecute("https://www.google.com.vn/?gws_rd=ssl#q=" & $sKeyWord)
 EndFunc
 
