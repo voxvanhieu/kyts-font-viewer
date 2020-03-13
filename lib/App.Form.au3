@@ -1,5 +1,5 @@
 #include-once
-#include "Lib.App.Vars.au3"
+#include "App.Vars.au3"
 
 ;~ This is function to create GUI
 Func _Create_MainGUI()
@@ -428,9 +428,8 @@ EndFunc
 
 #region Form event
 Func _FormMove()
-	If ($GUIState==@SW_SHOWNORMAL) Then
-		DllCall("user32.dll", "int", "SendMessage", "HWND", $hGUI, "int", 0x0112, "int", 0xF012, "int", 0)
-	EndIf
+	If ($GUIState<>@SW_SHOWNORMAL) Then Return 0
+	DllCall("user32.dll", "int", "SendMessage", "HWND", $hGUI, "int", 0x0112, "int", 0xF012, "int", 0)
 EndFunc		;Moving Form
 Func _ShowForm()
 	Local $I
@@ -450,11 +449,13 @@ Func _Restore()
 	_ShowForm()
 EndFunc
 Func _Maximize()
-	Local $TaskBarSize = WinGetPos("[CLASS:Shell_TrayWnd]")
+    Local $TaskBarSize = WinGetPos("[CLASS:Shell_TrayWnd]")
+    ;~ MsgBox(0, "a",$TaskBarSize[0] & " - " & $TaskBarSize[1])
 	Local $I, $J
-	If $CurentTab == $lb_Tab_Chrmap Then WinSetTrans($hGUI, "", 0)	;Hide GUI to hide unwanted efect
+    ;~ If $CurentTab == $lb_Tab_Chrmap Then WinSetTrans($hGUI, "", 0)	;Hide GUI to hide unwanted efect
 	If $GUIState == @SW_SHOWNORMAL Then
-		WinMove($hGUI, "", 0, 0, @DesktopWidth - $TaskBarSize[0], $TaskBarSize[1])
+        ;~ WinMove($hGUI, "", 0, 0, @DesktopWidth - $TaskBarSize[0], $TaskBarSize[1])
+        WinSetState ($hGUI, "", @SW_MAXIMIZE)
 		If $CharMapCtrlSize == 0 Then
 			$CharMapCtrlSize = _GetCharMapControlPos()
 			$CharMapCtrlTop = $CharMapCtrlSize[0]
@@ -466,7 +467,7 @@ Func _Maximize()
 			For $J = 0 To 12
 				ControlMove($hGUI, "",$Ctrl_Tab_CharMap[$I][$J], 255+($J*$CharMapCtrlSize), 177+($I*$CharMapCtrlSize), $CharMapCtrlSize-1, $CharMapCtrlSize-1)
 			Next
-		Next
+        Next
 		$I = 255+(13*$CharMapCtrlSize)+Int((@DesktopWidth-255-10-(13*$CharMapCtrlSize))/2-100)
 		ControlMove($hGUI, "", $Ctrl_Tab_CurrentChar, $I, 177, 200, 200)
 		ControlMove($hGUI, "", $Ctrl_Tab_CurrentChar_Dec, $I, 397, 200, 30)
@@ -480,9 +481,10 @@ Func _Maximize()
 		ControlMove($hGUI, "", $Ctrl_Tab_CharMap_Edit, $I, $J-30, 300, 20)
 		ControlMove($hGUI, "", $Ctrl_Tab_CharMap_Copy, $I, $J, 300, 30)
 		_WinAPI_RedrawWindow($hGUI)
-		$GUIState = @SW_MAXIMIZE
+        $GUIState = @SW_MAXIMIZE
 	ElseIf $GUIState == @SW_MAXIMIZE Then
-		WinMove($hGUI, "", (@DesktopWidth - $gW) /2, (@DesktopHeight-$gH)/2, $gW, $gH)
+        ;~ WinMove($hGUI, "", (@DesktopWidth - $gW) /2, (@DesktopHeight-$gH)/2, $gW, $gH)
+        WinSetState($hGUI, "", @SW_SHOWDEFAULT)
 		ControlMove($hGUI, "", $Ctrl_Tab_BackLabel, 255, 171, 519, 399)
 		;Move Controls
 		For $I = 0 To 9

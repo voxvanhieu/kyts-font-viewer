@@ -6,5 +6,5 @@
 #include <StaticConstants.au3>
 #include "UDF\TVExplorer.au3"
 
-#include "Lib.App.Vars.au3"
-#include "Lib.App.Form.au3"
+#include "App.Vars.au3"
+#include "App.Form.au3"
