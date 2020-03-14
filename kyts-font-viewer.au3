@@ -5,13 +5,14 @@
 #AutoIt3Wrapper_Compression=4
 #AutoIt3Wrapper_Compile_Both=y
 #AutoIt3Wrapper_UseX64=y
-#AutoIt3Wrapper_Res_Comment=A software to help users easily to view and install font with explorer.
-#AutoIt3Wrapper_Res_Description=KyTs Font Viewer
-#AutoIt3Wrapper_Res_Fileversion=1.3.0.0
+#AutoIt3Wrapper_Res_Description=A software to help users easily to view and install font with explorer.
+#AutoIt3Wrapper_Res_Fileversion=1.3.0.5
 #AutoIt3Wrapper_Res_Fileversion_AutoIncrement=y
 #AutoIt3Wrapper_Res_ProductName=Kyts Font Viewer
-#AutoIt3Wrapper_Res_ProductVersion=1.3.0
+#AutoIt3Wrapper_Res_ProductVersion=1.3
 #AutoIt3Wrapper_Res_CompanyName=JK. Kyts
+#AutoIt3Wrapper_Res_LegalCopyright=www.hieuda.com
+#AutoIt3Wrapper_Res_Language=1033
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 ;~ #RequireAdmin
 

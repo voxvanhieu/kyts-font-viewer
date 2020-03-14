@@ -2,7 +2,12 @@
 #AutoIt3Wrapper_Icon=assets\Help.ico
 #AutoIt3Wrapper_Outfile=bin\helper.exe
 #AutoIt3Wrapper_Compression=4
-#AutoIt3Wrapper_UseX64=n
+#AutoIt3Wrapper_Res_Description=Kyts Font Viewer Helper
+#AutoIt3Wrapper_Res_Fileversion=0.0.0.1
+#AutoIt3Wrapper_Res_ProductName=Kyts Font Viewer
+#AutoIt3Wrapper_Res_ProductVersion=1.3
+#AutoIt3Wrapper_Res_CompanyName=JK. Kyts
+#AutoIt3Wrapper_Res_LegalCopyright=www.hieuda.com
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
 ; KyTs Font Viewer Helper
