@@ -34,7 +34,8 @@ Func _Create_MainGUI()
     GUICtrlSetOnEvent(-1, "_Exit")
     GUICtrlSetResizing(-1, $GUI_DOCKTOP + $GUI_DOCKRIGHT + $GUI_DOCKHEIGHT + $GUI_DOCKWIDTH)
 
-    GUICtrlCreateLabel(ChrW(0xf17a), $gW-77, 0, 35, 35, BitOR($SS_CENTER, $SS_CENTERIMAGE))
+    ;~ GUICtrlCreateLabel(ChrW(0xf17a), $gW-77, 0, 35, 35, BitOR($SS_CENTER, $SS_CENTERIMAGE))
+    Global $btn_Maximize = GUICtrlCreateLabel(ChrW(0xf077), $gW-77, 0, 35, 35, BitOR($SS_CENTER, $SS_CENTERIMAGE))
     GUICtrlSetColor(-1, 0xFFFFFF)
     GUICtrlSetBkColor(-1, 0x0081FF)
     GUICtrlSetCursor(-1, 0)
@@ -48,7 +49,7 @@ Func _Create_MainGUI()
     GUICtrlSetBkColor(-1, 0x0081FF)
     GUICtrlSetCursor(-1, 0)
     GUICtrlSetFont(-1, 15, 0, 0, $sFontAwesomeName, 5)
-    GUICtrlSetTip(-1, "Minimize")
+    GUICtrlSetTip(-1, "Minimize to taskbar")
     GUICtrlSetOnEvent(-1, "_Minimize")
     GUICtrlSetResizing(-1, $GUI_DOCKTOP + $GUI_DOCKRIGHT + $GUI_DOCKHEIGHT + $GUI_DOCKWIDTH)
     GUICtrlCreateLabel(ChrW(0xf068), $gW-113, 15, 35, 20, $SS_CENTER)
@@ -95,10 +96,10 @@ Func _Create_MainGUI()
     GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKTOP + $GUI_DOCKBOTTOM + $GUI_DOCKWIDTH)
 
     ; Body GUI
-    Global $lb_FontName = GUICtrlCreateLabel("Font name:", 255, 40, $gW-335, 35, $SS_CENTERIMAGE)
-    GUICtrlSetFont(-1, 20, 0, 0, $DefaultFont)
+    Global $lb_FontName = GUICtrlCreateLabel("Font name", 255, 40, $gW-335, 40, $SS_CENTERIMAGE)
+    GUICtrlSetFont(-1, 24, $FW_SEMIBOLD, 0, $DefaultFont)
     GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKTOP + $GUI_DOCKRIGHT + $GUI_DOCKHEIGHT)
-    Global $lb_FontLocation = GUICtrlCreateLabel("Location:", 255, 75, $gW-335, 20, $SS_CENTERIMAGE)
+    Global $lb_FontLocation = GUICtrlCreateLabel("Location", 255, 80, $gW-335, 20, $SS_CENTERIMAGE)
     GUICtrlSetFont(-1, 10, 0, 0, $DefaultFont)
     GUICtrlSetOnEvent(-1, "_OpenInExplorer")
     GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKTOP + $GUI_DOCKRIGHT + $GUI_DOCKHEIGHT)
@@ -450,12 +451,15 @@ Func _Restore()
 EndFunc
 Func _Maximize()
     Local $TaskBarSize = WinGetPos("[CLASS:Shell_TrayWnd]")
-    ;~ MsgBox(0, "a",$TaskBarSize[0] & " - " & $TaskBarSize[1])
 	Local $I, $J
-    ;~ If $CurentTab == $lb_Tab_Chrmap Then WinSetTrans($hGUI, "", 0)	;Hide GUI to hide unwanted efect
+    If $CurentTab == $lb_Tab_Chrmap Then WinSetTrans($hGUI, "", 0)	;Hide GUI to hide unwanted efect
 	If $GUIState == @SW_SHOWNORMAL Then
-        ;~ WinMove($hGUI, "", 0, 0, @DesktopWidth - $TaskBarSize[0], $TaskBarSize[1])
+        ;~ Change Maximize icon
+        GUICtrlSetData($btn_Maximize, ChrW(0xf078))
+        GUICtrlSetTip($btn_Maximize, "Restore down")
+
         WinSetState ($hGUI, "", @SW_MAXIMIZE)
+
 		If $CharMapCtrlSize == 0 Then
 			$CharMapCtrlSize = _GetCharMapControlPos()
 			$CharMapCtrlTop = $CharMapCtrlSize[0]
@@ -479,14 +483,21 @@ Func _Maximize()
 		$I = 255+(13*$CharMapCtrlSize)+Int((@DesktopWidth-255-10-(13*$CharMapCtrlSize))/2-150)
 		$J = 177+(9*$CharMapCtrlSize)+($CharMapCtrlSize-30)
 		ControlMove($hGUI, "", $Ctrl_Tab_CharMap_Edit, $I, $J-30, 300, 20)
-		ControlMove($hGUI, "", $Ctrl_Tab_CharMap_Copy, $I, $J, 300, 30)
-		_WinAPI_RedrawWindow($hGUI)
+        ControlMove($hGUI, "", $Ctrl_Tab_CharMap_Copy, $I, $J, 300, 30)
+        
+		If $CurentTab == $lb_Tab_Chrmap Then _WinAPI_RedrawWindow($hGUI)
         $GUIState = @SW_MAXIMIZE
 	ElseIf $GUIState == @SW_MAXIMIZE Then
-        ;~ WinMove($hGUI, "", (@DesktopWidth - $gW) /2, (@DesktopHeight-$gH)/2, $gW, $gH)
+        $GUIState = @SW_SHOWNORMAL
+        
+        ;~ Change Maximize icon
+        GUICtrlSetData($btn_Maximize, ChrW(0xf077))
+        GUICtrlSetTip($btn_Maximize, "Maximize")
+
         WinSetState($hGUI, "", @SW_SHOWDEFAULT)
+
+		;~ Move Controls
 		ControlMove($hGUI, "", $Ctrl_Tab_BackLabel, 255, 171, 519, 399)
-		;Move Controls
 		For $I = 0 To 9
 			For $J = 0 To 12
 				ControlMove($hGUI, "",$Ctrl_Tab_CharMap[$I][$J], 255+($J*40), 171+($I*40), 39, 39)
@@ -500,9 +511,9 @@ Func _Maximize()
 		ControlMove($hGUI, "", $Ctrl_Tab_CurrentChar_Java, 785, 455, 155, 30)
 		ControlMove($hGUI, "", $Ctrl_Tab_CurrentChar_HTML, 785, 485, 155, 30)
 		ControlMove($hGUI, "", $Ctrl_Tab_CharMap_Edit, 775, 525, 165, 20)
-		ControlMove($hGUI, "", $Ctrl_Tab_CharMap_Copy, 775, 550, 165, 20)
-		_WinAPI_RedrawWindow($hGUI)
-		$GUIState = @SW_SHOWNORMAL
+        ControlMove($hGUI, "", $Ctrl_Tab_CharMap_Copy, 775, 550, 165, 20)
+        
+		If $CurentTab == $lb_Tab_Chrmap Then _WinAPI_RedrawWindow($hGUI)
 	EndIf
 	If $CurentTab == $lb_Tab_Chrmap Then WinSetTrans($hGUI, "", 255)
 EndFunc
@@ -845,9 +856,9 @@ Func _ViewFont($sPath)
 	$CurentFontPath = $sPath
 	$CurentFontName = _WinAPI_GetFontResourceInfo($CurentFontPath, True)
 
-	GUICtrlSetData($lb_FontName, "Font name: " & $CurentFontName)
-	GUICtrlSetData($lb_FontLocation, "Location: " & $CurentFontPath)
-	GUICtrlSetTip($lb_FontLocation, "Click to go to font directory!")
+	GUICtrlSetData($lb_FontName, $CurentFontName)
+	GUICtrlSetData($lb_FontLocation, $CurentFontPath)
+	GUICtrlSetTip($lb_FontLocation, "View in explorer!")
 	GUICtrlSetCursor($lb_FontLocation, 0)
 	_WinAPI_AddFontResourceEx($CurentFontPath, $FR_PRIVATE)
 	GUICtrlSetFont($lb_Tab_Overview_Alphabet, 12, 0, 0, $CurentFontName, 5)
