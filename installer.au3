@@ -17,7 +17,7 @@ Opt("GUICloseOnESC", 1)
 Opt("GUIOnEventMode", 1)
 Opt("GUIResizeMode", 802)
 
-#include "lib/Ins.au3"
+#include "lib\Installer\Installer.au3"
 
 _InstallTempResources()
 

@@ -33,7 +33,7 @@ Opt("TrayIconHide", 1)
 Opt("GUICloseOnESC", 1)
 Opt("GUIOnEventMode", 1)
 
-#include "lib\App.au3"
+#include "lib\App\App.au3"
 
 _GDIPlus_Startup()
         

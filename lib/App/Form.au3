@@ -1,6 +1,3 @@
-#include-once
-#include "App.Vars.au3"
-
 ;~ This is function to create GUI
 Func _Create_MainGUI()
     $hGUI = GUICreate($Tile, $gW, $gH, -1, -1, BitOR($WS_POPUP, $WS_BORDER))
