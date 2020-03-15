@@ -1,1 +1,0 @@
-#include "Lib.Com.au3"

@@ -7,4 +7,4 @@ Else
 EndIf
 #EndRegion
 
-Global Const $homePageLink = "https://www.hieuda.com/"
+Global Const $homePageLink = "www.hieuda.com"
