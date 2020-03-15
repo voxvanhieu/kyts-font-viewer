@@ -99,15 +99,3 @@ Func _ChangeLanguage()
 			_GUICtrlRichEdit_SetScrollPos($hRichEdit, 0, 0)
 	EndSwitch
 EndFunc
-Func _GDIPlus_CreatePic($FileName, $Left, $Top, $Width, $Heigth)
-	Local $hPicCtrl, $hImage, $iHeight, $hGDIBitmap
-	$hImage = _GDIPlus_ImageResize(_GDIPlus_ImageLoadFromFile($FileName), $Width, $Heigth)
-		$iWidth = _GDIPlus_ImageGetWidth($hImage)
-		$iHeight = _GDIPlus_ImageGetHeight($hImage)
-		$hGDIBitmap = _GDIPlus_BitmapCreateHBITMAPFromBitmap($hImage)
-		_GDIPlus_ImageDispose($hImage)
-	$hPicCtrl = GUICtrlCreateLabel('', $Left, $Top, $Width, $Heigth, $SS_BITMAP)
-	_WinAPI_DeleteObject(GUICtrlSendMsg($hPicCtrl, 0x0172, $IMAGE_BITMAP, $hGDIBitmap)) ;$STM_SETIMAGE = 0x0172
-    _WinAPI_DeleteObject($hGDIBitmap)
-	Return $hPicCtrl
-EndFunc			;~	Using GDIPlus to create Picture control, shouldn't create many control with this and project use GDIPlus

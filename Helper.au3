@@ -49,9 +49,9 @@ Else
 EndIf
 #EndRegion
 
-Global Const $Tile = 'KyTs Font Viewer Helper'
+Global Const $Title = 'KyTs Font Viewer Helper'
 Global Const $gW = 600, $gH = 500
-Global Const $TileBarHeigth = 35
+Global Const $TitleBarHeigth = 35
 Global $CurentLanguage = 'EN'
 Global $sHelper_EN = @ScriptDir & '\assets\Help_EN.rtf'
 Global $sHelper_VN = @ScriptDir & '\assets\Help_VN.rtf'
@@ -59,12 +59,12 @@ Global $sHelper_VN = @ScriptDir & '\assets\Help_VN.rtf'
 If (Not FileExists($sHelper_EN)) Or (Not FileExists($sHelper_VN)) Then MsgBox(16, 'Missing File!', 'The construction file is not available. Reinstall the software to fix this!')
 
 #Region 	;Create GUI
-Global $hGUI = GUICreate($Tile, $gW, $gH, -1, -1, BitOR($WS_POPUP, $WS_BORDER), BitOR($WS_EX_TOOLWINDOW, $WS_EX_TOPMOST))
+Global $hGUI = GUICreate($Title, $gW, $gH, -1, -1, BitOR($WS_POPUP, $WS_BORDER), BitOR($WS_EX_TOOLWINDOW, $WS_EX_TOPMOST))
 GUISetBkColor(0xFFFFFF)
 
 _GDIPlus_Startup()
-; Create tile bar
-GUICtrlCreateLabel('', 0, 0, $gW, $TileBarHeigth)
+; Create Title bar
+GUICtrlCreateLabel('', 0, 0, $gW, $TitleBarHeigth)
 GUICtrlSetBkColor(-1, 0x2D2D30)
 GUICtrlSetState(-1, $GUI_DISABLE)
 GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKTOP + $GUI_DOCKRIGHT + $GUI_DOCKHEIGHT)
@@ -73,7 +73,7 @@ _GDIPlus_CreatePic(@ScriptDir & "\assets\Icon_mini.png", 5, 5, 25, 25)
 GUICtrlSetBkColor(-1, -2)
 GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKTOP + $GUI_DOCKWIDTH + $GUI_DOCKHEIGHT)
 
-GUICtrlCreateLabel($Tile, 35, 0, $gW-185, $TileBarHeigth, $SS_CENTERIMAGE)
+GUICtrlCreateLabel($Title, 35, 0, $gW-185, $TitleBarHeigth, $SS_CENTERIMAGE)
 GUICtrlSetColor(-1, 0xFFFFFF)
 GUICtrlSetBkColor(-1, -2)
 GUICtrlSetFont(-1, 12, 0, 0, $DefaultFont & " SemiBold", 5)
@@ -89,7 +89,7 @@ GUICtrlSetTip(-1, "Exit")
 GUICtrlSetOnEvent(-1, "_Exit")
 GUICtrlSetResizing(-1, $GUI_DOCKTOP + $GUI_DOCKRIGHT + $GUI_DOCKHEIGHT + $GUI_DOCKWIDTH)
 
-Global $hRichEdit = _GUICtrlRichEdit_Create($hGUI, "", 0, $TileBarHeigth, $gW, $gH-$TileBarHeigth-30, BitOR($ES_MULTILINE, $ES_READONLY, $WS_VSCROLL), $WS_EX_TOOLWINDOW)
+Global $hRichEdit = _GUICtrlRichEdit_Create($hGUI, "", 0, $TitleBarHeigth, $gW, $gH-$TitleBarHeigth-30, BitOR($ES_MULTILINE, $ES_READONLY, $WS_VSCROLL), $WS_EX_TOOLWINDOW)
 		_GUICtrlRichEdit_StreamFromFile($hRichEdit, $sHelper_EN)
 		_GUICtrlRichEdit_SetScrollPos($hRichEdit, 0, 0)
 
