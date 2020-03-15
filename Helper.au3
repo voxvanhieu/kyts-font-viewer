@@ -36,7 +36,7 @@ Opt("GUIOnEventMode", 1)
 #include <StaticConstants.au3>
 
 #Region	; Load Font Awesome Resource and Detect default fonts
-Global Const $sFontAwesomePath = @ScriptDir & "\Resource\FontAwesome.otf"
+Global Const $sFontAwesomePath = @ScriptDir & "\assets\FontAwesome.otf"
 Global Const $sFontAwesomeName = _WinAPI_GetFontResourceInfo($sFontAwesomePath, True)
 _WinAPI_AddFontResourceEx($sFontAwesomePath, $FR_PRIVATE)
 
@@ -53,8 +53,8 @@ Global Const $Tile = 'KyTs Font Viewer Helper'
 Global Const $gW = 600, $gH = 500
 Global Const $TileBarHeigth = 35
 Global $CurentLanguage = 'EN'
-Global $sHelper_EN = @ScriptDir & '\Resource\Help_EN.rtf'
-Global $sHelper_VN = @ScriptDir & '\Resource\Help_VN.rtf'
+Global $sHelper_EN = @ScriptDir & '\assets\Help_EN.rtf'
+Global $sHelper_VN = @ScriptDir & '\assets\Help_VN.rtf'
 
 If (Not FileExists($sHelper_EN)) Or (Not FileExists($sHelper_VN)) Then MsgBox(16, 'Missing File!', 'The construction file is not available. Reinstall the software to fix this!')
 
@@ -69,7 +69,7 @@ GUICtrlSetBkColor(-1, 0x2D2D30)
 GUICtrlSetState(-1, $GUI_DISABLE)
 GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKTOP + $GUI_DOCKRIGHT + $GUI_DOCKHEIGHT)
 
-_GDIPlus_CreatePic(@ScriptDir & "\Resource\Icon_mini.png", 5, 5, 25, 25)
+_GDIPlus_CreatePic(@ScriptDir & "\assets\Icon_mini.png", 5, 5, 25, 25)
 GUICtrlSetBkColor(-1, -2)
 GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKTOP + $GUI_DOCKWIDTH + $GUI_DOCKHEIGHT)
 
