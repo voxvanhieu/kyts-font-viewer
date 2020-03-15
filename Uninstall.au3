@@ -1,9 +1,14 @@
 #RequireAdmin
 #Region ;**** Directives created by AutoIt3Wrapper_GUI ****
-#AutoIt3Wrapper_Icon=Resource\uninstall.ico
+#AutoIt3Wrapper_Icon=assets\uninstall.ico
 #AutoIt3Wrapper_Outfile=bin\uninstall.exe
 #AutoIt3Wrapper_Compression=4
-#AutoIt3Wrapper_UseX64=n
+#AutoIt3Wrapper_Res_Description=Uninstall Kyts Font Viewer
+#AutoIt3Wrapper_Res_Fileversion=0.0.0.1
+#AutoIt3Wrapper_Res_ProductName=Kyts Font Viewer
+#AutoIt3Wrapper_Res_ProductVersion=1.3
+#AutoIt3Wrapper_Res_CompanyName=JK. Kyts
+#AutoIt3Wrapper_Res_LegalCopyright=www.hieuda.com
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
 Global Const $UninstallKey = 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\KyTs Font Viewer'
@@ -24,8 +29,8 @@ Func _Uninstall()
 		RegDelete($SoftwareKey)
 		FileDelete($sInstallDir & '\Resource\FontAwesome.otf')
 		FileDelete($sInstallDir & '\Resource\Icon_mini.png')
-		FileDelete($sInstallDir & 'Resource\Help_EN.rtf')
-		FileDelete($sInstallDir & 'Resource\Help_VN.rtf')
+		FileDelete($sInstallDir & '\Resource\Help_EN.rtf')
+		FileDelete($sInstallDir & '\Resource\Help_VN.rtf')
 		DirRemove($sInstallDir & '\Resource')
 		FileDelete(@DesktopDir & '\KyTs Font Viewer.lnk')
 		FileDelete($sInstallDir & '\KyTs Font Viewer.exe')

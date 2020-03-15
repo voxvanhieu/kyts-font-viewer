@@ -1,6 +1,6 @@
 #RequireAdmin
 ;~ InstallFont("\\server.local\Software\_Install\_Default\1\CORPORATE FONT\*.*")
-InstallFont('C:\Users\PC\Desktop\TestFont\HLHOCTRO.TTF')
+;~ InstallFont('C:\Users\PC\Desktop\TestFont\HLHOCTRO.TTF')
 
 Func InstallFont($sSourceFile, $sFontDescript="", $sFontsPath="")
     Local Const $HWND_BROADCAST = 0xFFFF
