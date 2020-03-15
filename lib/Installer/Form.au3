@@ -25,7 +25,7 @@ Func _LoadFontAwesomeResource()
 EndFunc
 
 Func _Create_MainGUI()
-    Global $hGUI = GUICreate($Tile, $gW, $gH+50, -1, -1, BitOR($WS_POPUP, $WS_BORDER))
+    Global $hGUI = GUICreate($Title, $gW, $gH+50, -1, -1, BitOR($WS_POPUP, $WS_BORDER))
     GUISetBkColor(0xFFFFFF)
     GUISetOnEvent($GUI_EVENT_CLOSE, "_Exit")
     
@@ -111,7 +111,7 @@ Func _Create_MainGUI()
             _GDIPlus_CreatePic($sIconDir, 10, $gH+10, 100, 100)
             GUICtrlCreateLabel("", 115, $gH+10, 5, 100)
             GUICtrlSetBkColor(-1, 0x1C8BFF)
-            GUICtrlCreateLabel(" " & $Tile, 120, $gH+10, $gW-130, 100, $SS_CENTERIMAGE)
+            GUICtrlCreateLabel(" " & $Title, 120, $gH+10, $gW-130, 100, $SS_CENTERIMAGE)
             GUICtrlSetBkColor(-1, 0xEEEEEE)
             GUICtrlSetFont(-1, 25, 0, 0, $DefaultFont & " SemiBold", 5)
     

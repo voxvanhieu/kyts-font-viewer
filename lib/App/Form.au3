@@ -1,12 +1,12 @@
 ;~ This is function to create GUI
 Func _Create_MainGUI()
-    $hGUI = GUICreate($Tile, $gW, $gH, -1, -1, BitOR($WS_POPUP, $WS_BORDER))
+    $hGUI = GUICreate($Title, $gW, $gH, -1, -1, BitOR($WS_POPUP, $WS_BORDER))
     GUISetIcon(@ScriptFullPath)
     GUISetBkColor(0xFFFFFF)
     GUISetOnEvent($GUI_EVENT_CLOSE, "_Exit")
     GUISetOnEvent($GUI_EVENT_RESTORE, "_Restore")
-    ; Create tile bar
-    GUICtrlCreateLabel("", 0, 0, $gW, $TileBarHeigth)
+    ; Create Title bar
+    GUICtrlCreateLabel("", 0, 0, $gW, $TitleBarHeigth)
     GUICtrlSetBkColor(-1, 0x2D2D30)
     GUICtrlSetState(-1, $GUI_DISABLE)
     GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKTOP + $GUI_DOCKRIGHT + $GUI_DOCKHEIGHT)
@@ -15,7 +15,7 @@ Func _Create_MainGUI()
     GUICtrlSetBkColor(-1, -2)
     GUICtrlSetResizing(-1, $GUI_DOCKLEFT + $GUI_DOCKTOP + $GUI_DOCKWIDTH + $GUI_DOCKHEIGHT)
 
-    GUICtrlCreateLabel($Tile, 35, 0, $gW-185, $TileBarHeigth, $SS_CENTERIMAGE)
+    GUICtrlCreateLabel($Title, 35, 0, $gW-185, $TitleBarHeigth, $SS_CENTERIMAGE)
     GUICtrlSetColor(-1, 0xFFFFFF)
     GUICtrlSetBkColor(-1, -2)
     GUICtrlSetFont(-1, 13, 0, 0, $DefaultFont & " SemiBold", 5)
@@ -600,7 +600,7 @@ Func _OpenInExplorer()
 EndFunc
 Func _CopyFontInfo()
 	ClipPut(GUICtrlRead($inp_Tab_MoreInfo))
-	Msgbox(64,$Tile & "Font info!","Copied to Clipboard!", 0, $hGUI)
+	Msgbox(64,$Title & "Font info!","Copied to Clipboard!", 0, $hGUI)
 EndFunc
 Func _SearchGoogleFont()
 	Local $sFontName = _WinAPI_GetFontResourceInfo($CurentFontPath, Default, 1)
@@ -684,10 +684,10 @@ EndFunc
 Func _Tab_CharMap_btCopy()
 	Local $Clip_Temp = GUICtrlRead($Ctrl_Tab_CharMap_Edit)
 	If $Clip_Temp == "" Then
-		MsgBox(16, $Tile & " Error!", "No data to copy to Clipboard!", 0, $hGUI)
+		MsgBox(16, $Title & " Error!", "No data to copy to Clipboard!", 0, $hGUI)
 	Else
 		ClipPut($Clip_Temp)
-		MsgBox(64, $Tile & " Copied!", "Copied: "&GUICtrlRead($Ctrl_Tab_CharMap_Edit)&" to Clipboard!", 0, $hGUI)
+		MsgBox(64, $Title & " Copied!", "Copied: "&GUICtrlRead($Ctrl_Tab_CharMap_Edit)&" to Clipboard!", 0, $hGUI)
 	EndIf
 EndFunc
 Func _Tab_CharMap_SetFont()		; Hàm này để đặt lại font tất các control trong tab CharMap và đặt lại ký tự trong control $Ctrl_Tab_CurrentChar
