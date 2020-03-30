@@ -28,12 +28,3 @@ Global $GUIState = @SW_SHOWNORMAL
 Global $CurentTab, $hFocus = 0
 Global $CharMapCtrlSize = 0, $CharMapCtrlTop = 1
 Global $CurentTV_Input_Data = ""
-
-#region Helper
-Global Const $Helper_Title = 'Kyts Font Viewer Helper'
-Global Const $Helper_gW = 600, $Helper_gH = 500
-Global $CurentLanguage = 'EN'
-Global $sHelper_EN = @ScriptDir & '\assets\Help_EN.rtf'
-Global $sHelper_VN = @ScriptDir & '\assets\Help_VN.rtf'
-
-#endregion

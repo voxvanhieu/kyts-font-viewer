@@ -55,14 +55,14 @@ Func _Create_MainGUI()
     GUICtrlSetFont(-1, 12, 0, 0, $sFontAwesomeName, 5)
     GUICtrlSetResizing(-1, $GUI_DOCKTOP + $GUI_DOCKRIGHT + $GUI_DOCKHEIGHT + $GUI_DOCKWIDTH)
 
-    GUICtrlCreateLabel(ChrW(0xf059), $gW-149, 0, 35, 35, BitOR($SS_CENTER, $SS_CENTERIMAGE))
-    GUICtrlSetColor(-1, 0xFFFFFF)
-    GUICtrlSetBkColor(-1, 0x2D2D30)
-    GUICtrlSetCursor(-1, 0)
-    GUICtrlSetFont(-1, 16, 0, 0, $sFontAwesomeName, 5)
-    GUICtrlSetTip(-1, "Help")
-    GUICtrlSetOnEvent(-1, "_ShowHelp")
-    GUICtrlSetResizing(-1, $GUI_DOCKTOP + $GUI_DOCKRIGHT + $GUI_DOCKHEIGHT + $GUI_DOCKWIDTH)
+    ;~ GUICtrlCreateLabel(ChrW(0xf059), $gW-149, 0, 35, 35, BitOR($SS_CENTER, $SS_CENTERIMAGE))
+    ;~ GUICtrlSetColor(-1, 0xFFFFFF)
+    ;~ GUICtrlSetBkColor(-1, 0x2D2D30)
+    ;~ GUICtrlSetCursor(-1, 0)
+    ;~ GUICtrlSetFont(-1, 16, 0, 0, $sFontAwesomeName, 5)
+    ;~ GUICtrlSetTip(-1, "Help")
+    ;~ GUICtrlSetOnEvent(-1, "_ShowHelp")
+    ;~ GUICtrlSetResizing(-1, $GUI_DOCKTOP + $GUI_DOCKRIGHT + $GUI_DOCKHEIGHT + $GUI_DOCKWIDTH)
 
     ; Create status bar
     Global $lb_StatusBar = GUICtrlCreateLabel("   </> with ♥ from JK.KYTS", 0, $gH-24, $gW, 25, $SS_CENTERIMAGE)
@@ -425,26 +425,8 @@ Func _Create_MainGUI()
 EndFunc
 
 #region Form event
-Func _FormMove()
-	If ($GUIState<>@SW_SHOWNORMAL) Then Return 0
-	DllCall("user32.dll", "int", "SendMessage", "HWND", $hGUI, "int", 0x0112, "int", 0xF012, "int", 0)
-EndFunc		;Moving Form
-Func _ShowForm()
-	Local $I
-	For $I = 0 To 255 Step +15
-		WinSetTrans($hGUI,"", $I)
-		Sleep(10)
-	Next
-EndFunc
-Func _HideForm()
-	Local $I
-	For $I = 255 To 0 Step -15
-		WinSetTrans($hGUI,"", $I)
-		Sleep(10)
-	Next
-EndFunc
 Func _Restore()
-	_ShowForm()
+	_ShowForm($hGUI)
 EndFunc
 Func _Maximize()
     Local $TaskBarSize = WinGetPos("[CLASS:Shell_TrayWnd]")
@@ -519,6 +501,25 @@ Func _Minimize()
 	GUISetState(@SW_MINIMIZE, $hGUI)
 EndFunc
 
+Func _FormMove($_hGUI = $hGUI)
+	If ($GUIState<>@SW_SHOWNORMAL) Then Return 0
+	DllCall("user32.dll", "int", "SendMessage", "HWND", $_hGUI, "int", 0x0112, "int", 0xF012, "int", 0)
+EndFunc		;Moving Form
+Func _ShowForm($_hGUI = $hGUI)
+	Local $I
+	For $I = 0 To 255 Step +15
+		WinSetTrans($_hGUI,"", $I)
+		Sleep(10)
+	Next
+EndFunc
+Func _HideForm($_hGUI = $hGUI)
+	Local $I
+	For $I = 255 To 0 Step -15
+		WinSetTrans($_hGUI,"", $I)
+		Sleep(10)
+	Next
+EndFunc
+
 Func _Exit()
 	_HideForm()
 	_WinAPI_RemoveFontResourceEx($CurentFontPath, $FR_PRIVATE)
@@ -573,17 +574,6 @@ Func _TabChange()
 	GUICtrlSetBkColor($CurentTab, 0x1C8BFF)
 EndFunc
 
-Func _ShowHelp()
-	If Not FileExists(@ScriptDir & "\Helper.exe") Then
-		MsgBox(16, "Error", "Something went wrong! Reinstall this product to fix this error!")
-	Else
-		ShellExecute(@ScriptDir & "\Helper.exe")
-		_HideForm()
-		WinWaitActive("KyTs Font Viewer Helper")
-		WinWaitClose("KyTs Font Viewer Helper")
-		_ShowForm()
-	EndIf
-EndFunc
 Func _GoToHomePage()
 	ShellExecute($homePageLink)
 EndFunc

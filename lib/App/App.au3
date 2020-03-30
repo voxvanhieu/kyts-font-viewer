@@ -8,4 +8,3 @@
 
 #include "Vars.au3"
 #include "Form.au3"
-#include "Form.Helper.au3"
