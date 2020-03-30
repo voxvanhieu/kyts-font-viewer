@@ -5,7 +5,7 @@
 #AutoIt3Wrapper_Compression=4
 #AutoIt3Wrapper_Compile_Both=y
 #AutoIt3Wrapper_UseX64=y
-#AutoIt3Wrapper_Res_Description=A software to help users easily to view and install font with explorer.
+#AutoIt3Wrapper_Res_Description=Better Font Viewer
 #AutoIt3Wrapper_Res_Fileversion=1.3.0.5
 #AutoIt3Wrapper_Res_Fileversion_AutoIncrement=y
 #AutoIt3Wrapper_Res_ProductName=Kyts Font Viewer
