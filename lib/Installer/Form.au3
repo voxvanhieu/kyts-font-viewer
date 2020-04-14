@@ -471,7 +471,6 @@ Func _StartInstall()
 			FileInstall("bin\KyTs Font Viewer_x64.exe", $sInstallDir & "\KyTs Font Viewer.exe", 1)
 		EndIf
 		FileCreateShortcut($sInstallDir & "\KyTs Font Viewer.exe", @DesktopDir & "\KyTs Font Viewer.lnk")
-		FileInstall("bin\Helper.exe", $sInstallDir & "\Helper.exe", 1)
 		FileInstall("assets\ReadMe.rtf", $sInstallDir & "\ReadMe.rtf", 1)
 		FileInstall("bin\Uninstall.exe", $sInstallDir & "\Uninstall.exe", 1)
 		DirCreate($sInstallDir & "\assets")
