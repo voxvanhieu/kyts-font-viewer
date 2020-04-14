@@ -12,7 +12,7 @@
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
 Global Const $UninstallKey = 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\KyTs Font Viewer'
-Global Const $SoftwareKey  = 'HKCU\Software\KyTs Tech\KyTs Font Viewer'
+Global Const $SoftwareKey  = 'HKCU\Software\Kyts\KyTs Font Viewer'
 Global Const $_ErrorMesage = 'Uninstaller can not find KyTs Font Viewer in registry!' & @CRLF & 'May be KyTs Font Viewer is not installed on your PC or the setup was not successfully.'
 
 If RegRead($SoftwareKey, "Install") <> '' Then
@@ -27,15 +27,14 @@ Func _Uninstall()
 		Global Const $sInstallDir = RegRead($SoftwareKey, "Install")
 		RegDelete($UninstallKey)
 		RegDelete($SoftwareKey)
-		FileDelete($sInstallDir & '\Resource\FontAwesome.otf')
-		FileDelete($sInstallDir & '\Resource\Icon_mini.png')
-		FileDelete($sInstallDir & '\Resource\Help_EN.rtf')
-		FileDelete($sInstallDir & '\Resource\Help_VN.rtf')
-		DirRemove($sInstallDir & '\Resource')
-		FileDelete(@DesktopDir & '\KyTs Font Viewer.lnk')
+		FileDelete($sInstallDir & '\assets\FontAwesome.otf')
+		FileDelete($sInstallDir & '\assets\Icon_mini.png')
+		FileDelete($sInstallDir & '\assets\Help_EN.rtf')
+		FileDelete($sInstallDir & '\assets\Help_VN.rtf')
+		DirRemove($sInstallDir & '\assets')
 		FileDelete($sInstallDir & '\KyTs Font Viewer.exe')
-		FileDelete($sInstallDir & '\Helper.exe')
 		FileDelete($sInstallDir & '\ReadMe.rtf')
+		FileDelete(@DesktopDir & '\KyTs Font Viewer.lnk')
 
 		RegWrite('HKCR\ttffile\shell\preview\command', '', 'REG_EXPAND_SZ', '%SystemRoot%\System32\fontview.exe %1')
 		RegWrite('HKCR\otffile\shell\preview\command', '', 'REG_EXPAND_SZ', '%SystemRoot%\System32\fontview.exe %1')

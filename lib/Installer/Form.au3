@@ -1,7 +1,7 @@
 
 Func _InstallTempResources()
     If @Compiled Then
-        Global $sTempDir = @TempDir & "\KyTs Tech"
+        Global $sTempDir = @TempDir & "\Kyts"
         DirCreate($sTempDir)
         FileInstall("assets\FontAwesome.otf", $sTempDir & "\FontAwesome.otf")
         Global $sFontAwesomePatch = $sTempDir & "\FontAwesome.otf"
@@ -177,7 +177,7 @@ Func _Create_MainGUI()
             GUICtrlSetFont(-1, 20, 0, 0, $sFontAwesomeName, 5)
             GUICtrlSetOnEvent(-1, "_TabChange")
         GUICtrlCreateTabItem(" ") ;Chose Location
-            Global $InstallDir = @ProgramFilesDir & "\KyTs Tech\KyTs Font Viewer"
+            Global $InstallDir = @ProgramFilesDir & "\Kyts\KyTs Font Viewer"
     
             GUICtrlCreateLabel("Installation Location:", 10, 170, $gW-20, 30, $SS_CENTERIMAGE)
             GUICtrlSetFont(-1, 15, 0, 0, $DefaultFont, 5)
@@ -480,7 +480,7 @@ Func _StartInstall()
 		FileInstall("assets\Help_VN.rtf", $sInstallDir & "\assets\Help_VN.rtf", 1)
 		_SetProgressTo(20)
 
-		Global Const $Key  = "HKCU\Software\KyTs Tech\KyTs Font Viewer"
+		Global Const $Key  = "HKCU\Software\Kyts\KyTs Font Viewer"
 		Global Const $UKey = "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\KyTs Font Viewer"
 		_SetProgressTo(45)
 

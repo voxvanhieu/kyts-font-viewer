@@ -3,10 +3,10 @@
 #AutoIt3Wrapper_Outfile=bin\KyTs Font Viewer.exe
 #AutoIt3Wrapper_Outfile_x64=bin\KyTs Font Viewer_x64.exe
 #AutoIt3Wrapper_Compression=4
+#AutoIt3Wrapper_UseUpx=y
 #AutoIt3Wrapper_Compile_Both=y
-#AutoIt3Wrapper_UseX64=y
 #AutoIt3Wrapper_Res_Description=Better Font Viewer
-#AutoIt3Wrapper_Res_Fileversion=1.3.0.5
+#AutoIt3Wrapper_Res_Fileversion=1.0.1.0
 #AutoIt3Wrapper_Res_Fileversion_AutoIncrement=y
 #AutoIt3Wrapper_Res_ProductName=Kyts Font Viewer
 #AutoIt3Wrapper_Res_ProductVersion=1.3
