@@ -9,7 +9,7 @@
 #AutoIt3Wrapper_Res_Fileversion=1.0.1.0
 #AutoIt3Wrapper_Res_Fileversion_AutoIncrement=y
 #AutoIt3Wrapper_Res_ProductName=Kyts Font Viewer
-#AutoIt3Wrapper_Res_ProductVersion=1.3
+#AutoIt3Wrapper_Res_ProductVersion=1.0
 #AutoIt3Wrapper_Res_CompanyName=JK. Kyts
 #AutoIt3Wrapper_Res_LegalCopyright=www.hieuda.com
 #AutoIt3Wrapper_Res_Language=1033
