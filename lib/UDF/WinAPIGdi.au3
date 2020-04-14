@@ -1,13 +1,20 @@
 #include-once
 
 #include "APIGdiConstants.au3"
-#include "WinAPI.au3"
+#include "StructureConstants.au3"
 #include "WinAPICom.au3"
+#include "WinAPIConv.au3"
+#include "WinAPIError.au3"
+#include "WinAPIGdiDC.au3"
+#include "WinAPIGdiInternals.au3"
+#include "WinAPIHObj.au3"
+#include "WinAPIIcons.au3"
 #include "WinAPIInternals.au3"
+#include "WinAPIMisc.au3"
 
 ; #INDEX# =======================================================================================================================
 ; Title .........: WinAPI Extended UDF Library for AutoIt3
-; AutoIt Version : 3.3.14.2
+; AutoIt Version : 3.3.14.5
 ; Description ...: Additional variables, constants and functions for the WinAPIGdi.au3
 ; Author(s) .....: Yashied, jpm
 ; ===============================================================================================================================
@@ -17,6 +24,7 @@
 ; #CONSTANTS# ===================================================================================================================
 Global Const $tagBITMAPV4HEADER = 'struct;dword bV4Size;long bV4Width;long bV4Height;ushort bV4Planes;ushort bV4BitCount;dword bV4Compression;dword bV4SizeImage;long bV4XPelsPerMeter;long bV4YPelsPerMeter;dword bV4ClrUsed;dword bV4ClrImportant;dword bV4RedMask;dword bV4GreenMask;dword bV4BlueMask;dword bV4AlphaMask;dword bV4CSType;int bV4Endpoints[9];dword bV4GammaRed;dword bV4GammaGreen;dword bV4GammaBlue;endstruct'
 Global Const $tagCOLORADJUSTMENT = 'ushort Size;ushort Flags;ushort IlluminantIndex;ushort RedGamma;ushort GreenGamma;ushort BlueGamma;ushort ReferenceBlack;ushort ReferenceWhite;short Contrast;short Brightness;short Colorfulness;short RedGreenTint'
+Global Const $tagDEVMODE = 'wchar DeviceName[32];ushort SpecVersion;ushort DriverVersion;ushort Size;ushort DriverExtra;dword Fields;short Orientation;short PaperSize;short PaperLength;short PaperWidth;short Scale;short Copies;short DefaultSource;short PrintQuality;short Color;short Duplex;short YResolution;short TTOption;short Collate;wchar FormName[32];ushort Unused1;dword Unused2[3];dword Nup;dword Unused3;dword ICMMethod;dword ICMIntent;dword MediaType;dword DitherType;dword Reserved1;dword Reserved2;dword PanningWidth;dword PanningHeight'
 Global Const $tagDEVMODE_DISPLAY = 'wchar DeviceName[32];ushort SpecVersion;ushort DriverVersion;ushort Size;ushort DriverExtra;dword Fields;' & $tagPOINT & ';dword DisplayOrientation;dword DisplayFixedOutput;short Unused1[5];wchar Unused2[32];ushort LogPixels;dword BitsPerPel;dword PelsWidth;dword PelsHeight;dword DisplayFlags;dword DisplayFrequency'
 Global Const $tagDWM_COLORIZATION_PARAMETERS = 'dword Color;dword AfterGlow;uint ColorBalance;uint AfterGlowBalance;uint BlurBalance;uint GlassReflectionIntensity; uint OpaqueBlend'
 Global Const $tagENHMETAHEADER = 'struct;dword Type;dword Size;long rcBounds[4];long rcFrame[4];dword Signature;dword Version;dword Bytes;dword Records;ushort Handles;ushort Reserved;dword Description;dword OffDescription;dword PalEntries;long Device[2];long Millimeters[2];dword PixelFormat;dword OffPixelFormat;dword OpenGL;long Micrometers[2];endstruct'
@@ -58,27 +66,20 @@ Global Const $tagXFORM = 'float eM11;float eM12;float eM21;float eM22;float eDx;
 ; _WinAPI_ColorRGBToHLS
 ; _WinAPI_CombineTransform
 ; _WinAPI_CompressBitmapBits
-; _WinAPI_CopyBitmap
 ; _WinAPI_CopyEnhMetaFile
-; _WinAPI_CopyImage
 ; _WinAPI_CopyRect
 ; _WinAPI_Create32BitHBITMAP
-; _WinAPI_Create32BitHICON
-; _WinAPI_CreateANDBitmap
 ; _WinAPI_CreateBitmapIndirect
 ; _WinAPI_CreateBrushIndirect
 ; _WinAPI_CreateColorAdjustment
 ; _WinAPI_CreateCompatibleBitmapEx
 ; _WinAPI_CreateDIB
-; _WinAPI_CreateDIBColorTable
 ; _WinAPI_CreateDIBitmap
-; _WinAPI_CreateDIBSection
 ; _WinAPI_CreateEllipticRgn
-; _WinAPI_CreateEmptyIcon
 ; _WinAPI_CreateEnhMetaFile
 ; _WinAPI_CreateFontEx
-; _WinAPI_CreateIconIndirect
 ; _WinAPI_CreateNullRgn
+; _WinAPI_CreatePen
 ; _WinAPI_CreatePolygonRgn
 ; _WinAPI_CreateRectRgnIndirect
 ; _WinAPI_CreateSolidBitmap
@@ -88,6 +89,7 @@ Global Const $tagXFORM = 'float eM11;float eM12;float eM21;float eM22;float eDx;
 ; _WinAPI_DrawAnimatedRects
 ; _WinAPI_DrawBitmap
 ; _WinAPI_DrawFocusRect
+; _WinAPI_DrawLine
 ; _WinAPI_DrawShadowText
 ; _WinAPI_DwmDefWindowProc
 ; _WinAPI_DwmEnableBlurBehindWindow
@@ -135,11 +137,10 @@ Global Const $tagXFORM = 'float eM11;float eM12;float eM21;float eM22;float eDx;
 ; _WinAPI_GetClipBox
 ; _WinAPI_GetClipRgn
 ; _WinAPI_GetColorAdjustment
-; _WinAPI_GetCurrentObject
 ; _WinAPI_GetCurrentPosition
-; _WinAPI_GetDCEx
 ; _WinAPI_GetDeviceGammaRamp
 ; _WinAPI_GetDIBColorTable
+; _WinAPI_GetDIBits
 ; _WinAPI_GetEnhMetaFile
 ; _WinAPI_GetEnhMetaFileBits
 ; _WinAPI_GetEnhMetaFileDescription
@@ -151,9 +152,8 @@ Global Const $tagXFORM = 'float eM11;float eM12;float eM21;float eM22;float eDx;
 ; _WinAPI_GetGlyphOutline
 ; _WinAPI_GetGraphicsMode
 ; _WinAPI_GetGValue
-; _WinAPI_GetIconDimension
 ; _WinAPI_GetMapMode
-; _WinAPI_GetObjectType
+; _WinAPI_GetMonitorInfo
 ; _WinAPI_GetOutlineTextMetrics
 ; _WinAPI_GetPixel
 ; _WinAPI_GetPolyFillMode
@@ -166,7 +166,6 @@ Global Const $tagXFORM = 'float eM11;float eM12;float eM21;float eM22;float eDx;
 ; _WinAPI_GetTabbedTextExtent
 ; _WinAPI_GetTextAlign
 ; _WinAPI_GetTextCharacterExtra
-; _WinAPI_GetTextColor
 ; _WinAPI_GetTextFace
 ; _WinAPI_GetUDFColorMode
 ; _WinAPI_GetUpdateRect
@@ -184,9 +183,9 @@ Global Const $tagXFORM = 'float eM11;float eM12;float eM21;float eM22;float eDx;
 ; _WinAPI_InvertColor
 ; _WinAPI_InvertRect
 ; _WinAPI_InvertRgn
-; _WinAPI_IsAlphaBitmap
 ; _WinAPI_IsRectEmpty
 ; _WinAPI_LineDDA
+; _WinAPI_LineTo
 ; _WinAPI_LockWindowUpdate
 ; _WinAPI_LPtoDP
 ; _WinAPI_MaskBlt
@@ -194,6 +193,7 @@ Global Const $tagXFORM = 'float eM11;float eM12;float eM21;float eM22;float eDx;
 ; _WinAPI_MonitorFromPoint
 ; _WinAPI_MonitorFromRect
 ; _WinAPI_MonitorFromWindow
+; _WinAPI_MoveTo
 ; _WinAPI_MoveToEx
 ; _WinAPI_OffsetClipRgn
 ; _WinAPI_OffsetPoints
@@ -210,21 +210,19 @@ Global Const $tagXFORM = 'float eM11;float eM12;float eM21;float eM22;float eDx;
 ; _WinAPI_PolyBezierTo
 ; _WinAPI_PolyDraw
 ; _WinAPI_Polygon
-; _WinAPI_PrintWindow
 ; _WinAPI_PtInRectEx
 ; _WinAPI_PtInRegion
 ; _WinAPI_PtVisible
 ; _WinAPI_RadialGradientFill
 ; _WinAPI_Rectangle
 ; _WinAPI_RectInRegion
+; _WinAPI_RectIsEmpty
 ; _WinAPI_RectVisible
 ; _WinAPI_RemoveFontMemResourceEx
 ; _WinAPI_RemoveFontResourceEx
-; _WinAPI_RestoreDC
 ; _WinAPI_RGB
 ; _WinAPI_RotatePoints
 ; _WinAPI_RoundRect
-; _WinAPI_SaveDC
 ; _WinAPI_SaveHBITMAPToFile
 ; _WinAPI_SaveHICONToFile
 ; _WinAPI_ScaleWindowExt
@@ -240,6 +238,7 @@ Global Const $tagXFORM = 'float eM11;float eM12;float eM21;float eM22;float eDx;
 ; _WinAPI_SetDCPenColor
 ; _WinAPI_SetDeviceGammaRamp
 ; _WinAPI_SetDIBColorTable
+; _WinAPI_SetDIBits
 ; _WinAPI_SetDIBitsToDevice
 ; _WinAPI_SetEnhMetaFileBits
 ; _WinAPI_SetGraphicsMode
@@ -261,7 +260,6 @@ Global Const $tagXFORM = 'float eM11;float eM12;float eM21;float eM22;float eDx;
 ; _WinAPI_StrokeAndFillPath
 ; _WinAPI_StrokePath
 ; _WinAPI_SubtractRect
-; _WinAPI_SwitchColor
 ; _WinAPI_TabbedTextOut
 ; _WinAPI_TextOut
 ; _WinAPI_TransparentBlt
@@ -1040,6 +1038,17 @@ Func _WinAPI_CreateNullRgn()
 EndFunc   ;==>_WinAPI_CreateNullRgn
 
 ; #FUNCTION# ====================================================================================================================
+; Author ........: Zedna
+; Modified.......:
+; ===============================================================================================================================
+Func _WinAPI_CreatePen($iPenStyle, $iWidth, $iColor)
+	Local $aResult = DllCall("gdi32.dll", "handle", "CreatePen", "int", $iPenStyle, "int", $iWidth, "INT", $iColor)
+	If @error Then Return SetError(@error, @extended, 0)
+
+	Return $aResult[0]
+EndFunc   ;==>_WinAPI_CreatePen
+
+; #FUNCTION# ====================================================================================================================
 ; Author.........: Yashied
 ; Modified.......: jpm
 ; ===============================================================================================================================
@@ -1201,6 +1210,18 @@ Func _WinAPI_DrawFocusRect($hDC, $tRECT)
 
 	Return $aRet[0]
 EndFunc   ;==>_WinAPI_DrawFocusRect
+
+; #FUNCTION# ====================================================================================================================
+; Author ........: Zedna
+; Modified.......:
+; ===============================================================================================================================
+Func _WinAPI_DrawLine($hDC, $iX1, $iY1, $iX2, $iY2)
+	_WinAPI_MoveTo($hDC, $iX1, $iY1)
+	If @error Then Return SetError(@error, @extended, False)
+	_WinAPI_LineTo($hDC, $iX2, $iY2)
+	If @error Then Return SetError(@error + 10, @extended, False)
+	Return True
+EndFunc   ;==>_WinAPI_DrawLine
 
 ; #FUNCTION# ====================================================================================================================
 ; Author.........: Rover
@@ -1988,6 +2009,18 @@ Func _WinAPI_GetDIBColorTable($hBitmap)
 EndFunc   ;==>_WinAPI_GetDIBColorTable
 
 ; #FUNCTION# ====================================================================================================================
+; Author ........: Paul Campbell (PaulIA)
+; Modified.......: jpm
+; ===============================================================================================================================
+Func _WinAPI_GetDIBits($hDC, $hBitmap, $iStartScan, $iScanLines, $pBits, $tBI, $iUsage)
+	Local $aResult = DllCall("gdi32.dll", "int", "GetDIBits", "handle", $hDC, "handle", $hBitmap, "uint", $iStartScan, _
+			"uint", $iScanLines, "struct*", $pBits, "struct*", $tBI, "uint", $iUsage)
+	If @error Then Return SetError(@error, @extended, False)
+
+	Return $aResult[0]
+EndFunc   ;==>_WinAPI_GetDIBits
+
+; #FUNCTION# ====================================================================================================================
 ; Author.........: Yashied
 ; Modified.......: Jpm
 ; ===============================================================================================================================
@@ -2109,44 +2142,44 @@ EndFunc   ;==>_WinAPI_GetFontName
 ; Modified ......: UEZ
 ; ===============================================================================================================================
 Func _WinAPI_GetFontResourceInfo($sFont, $bForce = False, $iFlag = Default)
-    If $iFlag = Default Then
-        If $bForce Then
-            If Not _WinAPI_AddFontResourceEx($sFont, $FR_NOT_ENUM) Then Return SetError(@error + 20, @extended, '')
-        EndIf
+	If $iFlag = Default Then
+		If $bForce Then
+			If Not _WinAPI_AddFontResourceEx($sFont, $FR_NOT_ENUM) Then Return SetError(@error + 20, @extended, '')
+		EndIf
 
-        Local $iError = 0
-        Local $aRet = DllCall('gdi32.dll', 'bool', 'GetFontResourceInfoW', 'wstr', $sFont, 'dword*', 4096, 'wstr', '', 'dword', 0x01)
-        If @error Or Not $aRet[0] Then $iError = @error + 10
+		Local $iError = 0
+		Local $aRet = DllCall('gdi32.dll', 'bool', 'GetFontResourceInfoW', 'wstr', $sFont, 'dword*', 4096, 'wstr', '', 'dword', 0x01)
+		If @error Or Not $aRet[0] Then $iError = @error + 10
 
-        If $bForce Then
-            _WinAPI_RemoveFontResourceEx($sFont, $FR_NOT_ENUM)
-        EndIf
-        If $iError Then Return SetError($iError, 0, '')
+		If $bForce Then
+			_WinAPI_RemoveFontResourceEx($sFont, $FR_NOT_ENUM)
+		EndIf
+		If $iError Then Return SetError($iError, 0, '')
 
-        Return $aRet[3]
-    Else
-        If Not FileExists($sFont) Then
-            $sFont = RegRead("HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders", "Fonts") & "\" & $sFont
-            If Not FileExists($sFont) Then Return SetError(31, 0, "")
-        EndIf
-        Local Const $hFile = _WinAPI_CreateFile($sFont, 2, 2, 2)
-        If Not $hFile Then Return SetError(32, _WinAPI_GetLastError(), "")
-        Local Const $iFile = FileGetSize($sFont)
-        Local Const $tBuffer = DllStructCreate("byte[" & $iFile + 1 & "]")
-        Local Const $pFile = DllStructGetPtr($tBuffer)
-        Local $iRead
-        _WinAPI_ReadFile($hFile, $pFile, $iFile, $iRead)
-        _WinAPI_CloseHandle($hFile)
-        Local $sTTFName = _WinAPI_GetFontMemoryResourceInfo($pFile, $iFlag)
-        If @error Then
-            If @error = 1 Then
-                $sTTFName = _WinAPI_GetFontResourceInfo($sFont, True)
-                Return SetError(@error, @extended, $sTTFName)
-            EndIf
-            Return SetError(33, @error, "")
-        EndIf
-        Return $sTTFName
-    EndIf
+		Return $aRet[3]
+	Else
+		If Not FileExists($sFont) Then
+			$sFont = RegRead("HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders", "Fonts") & "\" & $sFont
+			If Not FileExists($sFont) Then Return SetError(31, 0, "")
+		EndIf
+		Local Const $hFile = _WinAPI_CreateFile($sFont, 2, 2, 2)
+		If Not $hFile Then Return SetError(32, _WinAPI_GetLastError(), "")
+		Local Const $iFile = FileGetSize($sFont)
+		Local Const $tBuffer = DllStructCreate("byte[" & $iFile + 1 & "]")
+		Local Const $pFile = DllStructGetPtr($tBuffer)
+		Local $iRead
+		_WinAPI_ReadFile($hFile, $pFile, $iFile, $iRead)
+		_WinAPI_CloseHandle($hFile)
+		Local $sTTFName = _WinAPI_GetFontMemoryResourceInfo($pFile, $iFlag)
+		If @error Then
+			If @error = 1 And $iFlag = 4 Then
+				$sTTFName = _WinAPI_GetFontResourceInfo($sFont, True)
+				Return SetError(@error, @extended, $sTTFName)
+			EndIf
+			Return SetError(33, @error, "")
+		EndIf
+		Return $sTTFName
+	EndIf
 EndFunc   ;==>_WinAPI_GetFontResourceInfo
 
 ; #FUNCTION# ====================================================================================================================
@@ -2154,72 +2187,71 @@ EndFunc   ;==>_WinAPI_GetFontResourceInfo
 ; Modified ......: UEZ, jpm
 ; ===============================================================================================================================
 Func _WinAPI_GetFontMemoryResourceInfo($pMemory, $iFlag = 1)
-    Local Const $tagTT_OFFSET_TABLE = "USHORT uMajorVersion;USHORT uMinorVersion;USHORT uNumOfTables;USHORT uSearchRange;USHORT uEntrySelector;USHORT uRangeShift"
-    Local Const $tagTT_TABLE_DIRECTORY = "char szTag[4];ULONG uCheckSum;ULONG uOffset;ULONG uLength"
-    Local Const $tagTT_NAME_TABLE_HEADER = "USHORT uFSelector;USHORT uNRCount;USHORT uStorageOffset"
-    Local Const $tagTT_NAME_RECORD = "USHORT uPlatformID;USHORT uEncodingID;USHORT uLanguageID;USHORT uNameID;USHORT uStringLength;USHORT uStringOffset"
+	Local Const $tagTT_OFFSET_TABLE = "USHORT uMajorVersion;USHORT uMinorVersion;USHORT uNumOfTables;USHORT uSearchRange;USHORT uEntrySelector;USHORT uRangeShift"
+	Local Const $tagTT_TABLE_DIRECTORY = "char szTag[4];ULONG uCheckSum;ULONG uOffset;ULONG uLength"
+	Local Const $tagTT_NAME_TABLE_HEADER = "USHORT uFSelector;USHORT uNRCount;USHORT uStorageOffset"
+	Local Const $tagTT_NAME_RECORD = "USHORT uPlatformID;USHORT uEncodingID;USHORT uLanguageID;USHORT uNameID;USHORT uStringLength;USHORT uStringOffset"
 
-    Local $tTTOffsetTable = DllStructCreate($tagTT_OFFSET_TABLE, $pMemory)
-    Local $iNumOfTables = _WinAPI_SwapWord(DllStructGetData($tTTOffsetTable, "uNumOfTables"))
+	Local $tTTOffsetTable = DllStructCreate($tagTT_OFFSET_TABLE, $pMemory)
+	Local $iNumOfTables = _WinAPI_SwapWord(DllStructGetData($tTTOffsetTable, "uNumOfTables"))
 
-    ;check is this is a true type font and the version is 1.0
-    If Not (_WinAPI_SwapWord(DllStructGetData($tTTOffsetTable, "uMajorVersion")) = 1 And _
-            _WinAPI_SwapWord(DllStructGetData($tTTOffsetTable, "uMinorVersion")) = 0) Then Return SetError(1, 0, "")
+	;check is this is a true type font and the version is 1.0
+	If Not (_WinAPI_SwapWord(DllStructGetData($tTTOffsetTable, "uMajorVersion")) = 1 And _WinAPI_SwapWord(DllStructGetData($tTTOffsetTable, "uMinorVersion")) = 0) Then Return SetError(1, 0, "")
 
-    Local $iTblDirSize = DllStructGetSize(DllStructCreate($tagTT_TABLE_DIRECTORY))
-    Local $bFound = False, $iOffset, $tTblDir
-    For $i = 0 To $iNumOfTables - 1
-        $tTblDir = DllStructCreate($tagTT_TABLE_DIRECTORY, $pMemory + DllStructGetSize($tTTOffsetTable) + $i * $iTblDirSize)
-        If StringLeft(DllStructGetData($tTblDir, "szTag"), 4) = "name" Then
-            $bFound = True
-            $iOffset = _WinAPI_SwapDWord(DllStructGetData($tTblDir, "uOffset"))
-            ExitLoop
-        EndIf
-    Next
+	Local $iTblDirSize = DllStructGetSize(DllStructCreate($tagTT_TABLE_DIRECTORY))
+	Local $bFound = False, $iOffset, $tTblDir
+	For $i = 0 To $iNumOfTables - 1
+		$tTblDir = DllStructCreate($tagTT_TABLE_DIRECTORY, $pMemory + DllStructGetSize($tTTOffsetTable) + $i * $iTblDirSize)
+		If StringLeft(DllStructGetData($tTblDir, "szTag"), 4) = "name" Then
+			$bFound = True
+			$iOffset = _WinAPI_SwapDWord(DllStructGetData($tTblDir, "uOffset"))
+			ExitLoop
+		EndIf
+	Next
 
-    If Not $bFound Then Return SetError(2, 0, "")
+	If Not $bFound Then Return SetError(2, 0, "")
 
-    Local $tNTHeader = DllStructCreate($tagTT_NAME_TABLE_HEADER, $pMemory + $iOffset)
-    Local $iNTHeaderSize = DllStructGetSize($tNTHeader)
-    Local $iNRCount = _WinAPI_SwapWord(DllStructGetData($tNTHeader, "uNRCount"))
-    Local $iStorageOffset = _WinAPI_SwapWord(DllStructGetData($tNTHeader, "uStorageOffset"))
+	Local $tNTHeader = DllStructCreate($tagTT_NAME_TABLE_HEADER, $pMemory + $iOffset)
+	Local $iNTHeaderSize = DllStructGetSize($tNTHeader)
+	Local $iNRCount = _WinAPI_SwapWord(DllStructGetData($tNTHeader, "uNRCount"))
+	Local $iStorageOffset = _WinAPI_SwapWord(DllStructGetData($tNTHeader, "uStorageOffset"))
 
-    Local $iTTRecordSize = DllStructGetSize(DllStructCreate($tagTT_NAME_RECORD))
-    Local $tResult, $sResult, $iStringLength = 0, $iStringOffset, $iEncodingID, $tTTRecord, $iError = 0
-    For $i = 0 To $iNRCount - 1
-        $tTTRecord = DllStructCreate($tagTT_NAME_RECORD, $pMemory + $iOffset + $iNTHeaderSize + $i * $iTTRecordSize)
-        If @error Then ContinueLoop
+	Local $iTTRecordSize = DllStructGetSize(DllStructCreate($tagTT_NAME_RECORD))
+	Local $tResult, $sResult, $iStringLength, $iStringOffset, $iEncodingID, $tTTRecord
+	For $i = 0 To $iNRCount - 1
+		$tTTRecord = DllStructCreate($tagTT_NAME_RECORD, $pMemory + $iOffset + $iNTHeaderSize + $i * $iTTRecordSize)
 
-        If _WinAPI_SwapWord($tTTRecord.uNameID) = $iFlag Then ;1 says that this is font name. 0 for example determines copyright info
-            $iStringLength = _WinAPI_SwapWord(DllStructGetData($tTTRecord, "uStringLength"))
-            $iStringOffset = _WinAPI_SwapWord(DllStructGetData($tTTRecord, "uStringOffset"))
-            $iEncodingID = _WinAPI_SwapWord(DllStructGetData($tTTRecord, "uEncodingID"))
+		If _WinAPI_SwapWord($tTTRecord.uNameID) = $iFlag Then ;1 says that this is font name. 0 for example determines copyright info
+			$iStringLength = _WinAPI_SwapWord(DllStructGetData($tTTRecord, "uStringLength"))
+			$iStringOffset = _WinAPI_SwapWord(DllStructGetData($tTTRecord, "uStringOffset"))
+			$iEncodingID = _WinAPI_SwapWord(DllStructGetData($tTTRecord, "uEncodingID"))
 
-            Local $sWchar = "char"
-            If $iEncodingID = 1 Then
-                $sWchar = "word"
-                $iStringLength /= 2
-            EndIf
+			Local $sWchar = "char"
+			If $iEncodingID = 1 Then
+				$sWchar = "word"
+				$iStringLength = $iStringLength / 2
+			EndIf
             If Not $iStringLength Then
                 $sResult = ""
                 ContinueLoop
-            EndIf
+			EndIf
+			
+			$tResult = DllStructCreate($sWchar & " szTTFName[" & $iStringLength & "]", $pMemory + $iOffset + $iStringOffset + $iStorageOffset)
 
-            $tResult = DllStructCreate($sWchar & " szTTFName[" & $iStringLength & "]", $pMemory + $iOffset + $iStringOffset + $iStorageOffset)
+			If $iEncodingID = 1 Then
+				$sResult = ""
+				For $j = 1 To $iStringLength
+					$sResult &= ChrW(_WinAPI_SwapWord(DllStructGetData($tResult, 1, $j)))
+				Next
+			Else
+				$sResult = $tResult.szTTFName
+			EndIf
 
-            If $iEncodingID = 1 Then
-                $sResult = ""
-                For $j = 1 To $iStringLength
-                    $sResult &= ChrW(_WinAPI_SwapWord(DllStructGetData($tResult, 1, $j)))
-                Next
-            Else
-                $sResult = $tResult.szTTFName
-            EndIf
+			If StringLen($sResult) > 0 Then ExitLoop
+		EndIf
+	Next
 
-            If StringLen($sResult) > 0 Then ExitLoop
-        EndIf
-    Next
-    Return $sResult
+	Return $sResult
 EndFunc   ;==>_WinAPI_GetFontMemoryResourceInfo
 
 ; #FUNCTION# ====================================================================================================================
@@ -2282,6 +2314,34 @@ Func _WinAPI_GetMapMode($hDC)
 
 	Return $aRet[0]
 EndFunc   ;==>_WinAPI_GetMapMode
+
+; #FUNCTION# ====================================================================================================================
+; Author.........: Yashied
+; Modified.......: jpm
+; ===============================================================================================================================
+Func _WinAPI_GetMonitorInfo($hMonitor)
+	Local $tMIEX = DllStructCreate('dword;long[4];long[4];dword;wchar[32]')
+	DllStructSetData($tMIEX, 1, DllStructGetSize($tMIEX))
+
+	Local $aRet = DllCall('user32.dll', 'bool', 'GetMonitorInfoW', 'handle', $hMonitor, 'struct*', $tMIEX)
+	If @error Or Not $aRet[0] Then Return SetError(@error + 10, @extended, 0)
+
+	Local $aResult[4]
+	For $i = 0 To 1
+		$aResult[$i] = DllStructCreate($tagRECT)
+		_WinAPI_MoveMemory($aResult[$i], DllStructGetPtr($tMIEX, $i + 2), 16)
+		; Return SetError(@error + 10, @extended, 0) ; cannot really occur
+		; EndIf
+	Next
+	$aResult[3] = DllStructGetData($tMIEX, 5)
+	Switch DllStructGetData($tMIEX, 4)
+		Case 1 ; MONITORINFOF_PRIMARY
+			$aResult[2] = 1
+		Case Else
+			$aResult[2] = 0
+	EndSwitch
+	Return $aResult
+EndFunc   ;==>_WinAPI_GetMonitorInfo
 
 ; #FUNCTION# ====================================================================================================================
 ; Author.........: Yashied
@@ -2744,6 +2804,17 @@ Func _WinAPI_LineDDA($iX1, $iY1, $iX2, $iY2, $pLineProc, $pData = 0)
 EndFunc   ;==>_WinAPI_LineDDA
 
 ; #FUNCTION# ====================================================================================================================
+; Author ........: Zedna
+; Modified.......:
+; ===============================================================================================================================
+Func _WinAPI_LineTo($hDC, $iX, $iY)
+	Local $aResult = DllCall("gdi32.dll", "bool", "LineTo", "handle", $hDC, "int", $iX, "int", $iY)
+	If @error Then Return SetError(@error, @extended, False)
+
+	Return $aResult[0]
+EndFunc   ;==>_WinAPI_LineTo
+
+; #FUNCTION# ====================================================================================================================
 ; Author.........: Yashied
 ; Modified.......: Jpm
 ; ===============================================================================================================================
@@ -2827,6 +2898,17 @@ Func _WinAPI_MonitorFromWindow($hWnd, $iFlag = 1)
 
 	Return $aRet[0]
 EndFunc   ;==>_WinAPI_MonitorFromWindow
+
+; #FUNCTION# ====================================================================================================================
+; Author ........: Zedna
+; Modified.......:
+; ===============================================================================================================================
+Func _WinAPI_MoveTo($hDC, $iX, $iY)
+	Local $aResult = DllCall("gdi32.dll", "bool", "MoveToEx", "handle", $hDC, "int", $iX, "int", $iY, "ptr", 0)
+	If @error Then Return SetError(@error, @extended, False)
+
+	Return $aResult[0]
+EndFunc   ;==>_WinAPI_MoveTo
 
 ; #FUNCTION# ====================================================================================================================
 ; Author.........: Yashied
@@ -3228,6 +3310,15 @@ Func _WinAPI_RectInRegion($hRgn, $tRECT)
 EndFunc   ;==>_WinAPI_RectInRegion
 
 ; #FUNCTION# ====================================================================================================================
+; Author ........: Paul Campbell (PaulIA)
+; Modified.......:
+; ===============================================================================================================================
+Func _WinAPI_RectIsEmpty(ByRef $tRECT)
+	Return (DllStructGetData($tRECT, "Left") = 0) And (DllStructGetData($tRECT, "Top") = 0) And _
+			(DllStructGetData($tRECT, "Right") = 0) And (DllStructGetData($tRECT, "Bottom") = 0)
+EndFunc   ;==>_WinAPI_RectIsEmpty
+
+; #FUNCTION# ====================================================================================================================
 ; Author.........: Yashied
 ; Modified.......: jpm
 ; ===============================================================================================================================
@@ -3440,7 +3531,7 @@ EndFunc   ;==>_WinAPI_SaveHBITMAPToFile
 
 ; #FUNCTION# ====================================================================================================================
 ; Author.........: Yashied
-; Modified.......: jpm
+; Modified.......: jpm, mLipok
 ; ===============================================================================================================================
 Func _WinAPI_SaveHICONToFile($sFilePath, Const ByRef $vIcon, $bCompress = 0, $iStart = 0, $iEnd = -1)
 	Local $aIcon, $aTemp, $iCount = 1
@@ -3484,14 +3575,14 @@ Func _WinAPI_SaveHICONToFile($sFilePath, Const ByRef $vIcon, $bCompress = 0, $iS
 	DllStructSetData($tIco, 'Type', 1)
 	DllStructSetData($tIco, 'Count', $iCount)
 
-	Local $iResult = 0, $iError = 0
+	Local $iResult = 0, $iError = 0, $iBytes
+	Local $aInfo[8], $aRet, $pData = 0, $iIndex = 0
+	Local $aSize[2], $tData = 0
 	Do
-		Local $iBytes
 		If Not _WinAPI_WriteFile($hFile, $tIco, $iLength, $iBytes) Then
 			$iError = @error + 30
 			ExitLoop
 		EndIf
-		Local $aInfo[8], $aRet, $pData = 0, $iIndex = 0
 		While $iCount > $iIndex
 			$aRet = DllCall('user32.dll', 'bool', 'GetIconInfo', 'handle', $aIcon[$iIndex], 'struct*', $tII)
 			If @error Or Not $aRet[0] Then
@@ -3538,11 +3629,8 @@ Func _WinAPI_SaveHICONToFile($sFilePath, Const ByRef $vIcon, $bCompress = 0, $iS
 				Case Else
 					$iError = 60
 			EndSwitch
-			If $iError Then
-				; Nothing
-			Else
-				Local $aSize[2]
-				Local $tData = DllStructCreate('byte Width;byte Height;byte ColorCount;byte Reserved;ushort Planes;ushort BitCount;long Size;long Offset', DllStructGetPtr($tIco) + 6 + 16 * $iIndex)
+			If Not $iError Then
+				$tData = DllStructCreate('byte Width;byte Height;byte ColorCount;byte Reserved;ushort Planes;ushort BitCount;long Size;long Offset', DllStructGetPtr($tIco) + 6 + 16 * $iIndex)
 				DllStructSetData($tData, 'ColorCount', 0)
 				DllStructSetData($tData, 'Reserved', 0)
 				DllStructSetData($tData, 'Planes', 1)
@@ -3797,6 +3885,18 @@ Func _WinAPI_SetDIBColorTable($hBitmap, $tColorTable, $iColorCount)
 
 	Return $aRet[0]
 EndFunc   ;==>_WinAPI_SetDIBColorTable
+
+; #FUNCTION# ====================================================================================================================
+; Author ........: Paul Campbell (PaulIA)
+; Modified.......: jpm
+; ===============================================================================================================================
+Func _WinAPI_SetDIBits($hDC, $hBitmap, $iStartScan, $iScanLines, $pBits, $tBMI, $iColorUse = 0)
+	Local $aResult = DllCall("gdi32.dll", "int", "SetDIBits", "handle", $hDC, "handle", $hBitmap, "uint", $iStartScan, _
+			"uint", $iScanLines, "struct*", $pBits, "struct*", $tBMI, "INT", $iColorUse)
+	If @error Then Return SetError(@error, @extended, False)
+
+	Return $aResult[0]
+EndFunc   ;==>_WinAPI_SetDIBits
 
 ; #FUNCTION# ====================================================================================================================
 ; Author.........: Luke
