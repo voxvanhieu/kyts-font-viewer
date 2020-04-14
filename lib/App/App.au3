@@ -7,5 +7,5 @@
 #include "..\UDF\TVExplorer.au3"
 
 #include "Vars.au3"
-#include "Form.au3"
 #include "Form.Helper.au3"
+#include "Form.au3"

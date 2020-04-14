@@ -574,15 +574,9 @@ Func _TabChange()
 EndFunc
 
 Func _ShowHelp()
-	If Not FileExists(@ScriptDir & "\Helper.exe") Then
-		MsgBox(16, "Error", "Something went wrong! Reinstall this product to fix this error!")
-	Else
-		ShellExecute(@ScriptDir & "\Helper.exe")
-		_HideForm()
-		WinWaitActive("KyTs Font Viewer Helper")
-		WinWaitClose("KyTs Font Viewer Helper")
-		_ShowForm()
-	EndIf
+    If (NOT WinExists($Helper_Title)) Then _Create_HelperGUI()
+    _HideForm()
+    GUISetState(@SW_SHOW, $hHelper)
 EndFunc
 Func _GoToHomePage()
 	ShellExecute($homePageLink)
