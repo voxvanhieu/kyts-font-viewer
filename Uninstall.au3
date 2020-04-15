@@ -12,11 +12,11 @@
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
 Global Const $UninstallKey = 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\KyTs Font Viewer'
-Global Const $SoftwareKey  = 'HKCU\Software\Kyts\KyTs Font Viewer'
+Global Const $SoftwareKey  = 'HKCU\Software\JK.Kyts\KyTs Font Viewer'
 Global Const $_ErrorMesage = 'Uninstaller can not find KyTs Font Viewer in registry!' & @CRLF & 'May be KyTs Font Viewer is not installed on your PC or the setup was not successfully.'
 
 If RegRead($SoftwareKey, "Install") <> '' Then
-	If Msgbox(BitOR(0x4, 0x20),'KyTs Font Viewer - Uninstaller','Do you really want to uninstall KyTs Font Viewer product?') == 6 Then _Uninstall()
+	If Msgbox(BitOR(0x4, 0x20),'KyTs Font Viewer','Do you really want to remove KyTs Font Viewer?') == 6 Then _Uninstall()
 Else
 	Msgbox(16,'KyTs Font Viewer - Uninstaller',$_ErrorMesage)
 EndIf
@@ -25,16 +25,9 @@ EndIf
 Func _Uninstall()
 	If @Compiled Then
 		Global Const $sInstallDir = RegRead($SoftwareKey, "Install")
+
 		RegDelete($UninstallKey)
 		RegDelete($SoftwareKey)
-		FileDelete($sInstallDir & '\assets\FontAwesome.otf')
-		FileDelete($sInstallDir & '\assets\Icon_mini.png')
-		FileDelete($sInstallDir & '\assets\Help_EN.rtf')
-		FileDelete($sInstallDir & '\assets\Help_VN.rtf')
-		DirRemove($sInstallDir & '\assets')
-		FileDelete($sInstallDir & '\KyTs Font Viewer.exe')
-		FileDelete($sInstallDir & '\ReadMe.rtf')
-		FileDelete(@DesktopDir & '\KyTs Font Viewer.lnk')
 
 		RegWrite('HKCR\ttffile\shell\preview\command', '', 'REG_EXPAND_SZ', '%SystemRoot%\System32\fontview.exe %1')
 		RegWrite('HKCR\otffile\shell\preview\command', '', 'REG_EXPAND_SZ', '%SystemRoot%\System32\fontview.exe %1')
@@ -47,6 +40,19 @@ Func _Uninstall()
 		RegDelete('HKCR\ttffile\shell\KyTs Font Viewer')
 		RegDelete('HKCR\otffile\shell\KyTs Font Viewer')
 		RegDelete('HKCR\fonfile\shell\KyTs Font Viewer')
+
+		
+		$CMD = '@RD /S /Q "' & @AppDataDir & '\Microsoft\Windows\Start Menu\Programs\KyTs Font Viewer"'
+		RunWait(@ComSpec & " /c " & $CMD, @WorkingDir, @SW_HIDE)
+
+		FileDelete(@DesktopDir & '\KyTs Font Viewer.lnk')
 	EndIf
-	Msgbox(0x40,'KyTs Font Viewer - Uninstaller','Uninstall Complete!')
+
+	Msgbox(0x40,'♥ KyTs Font Viewer ♥','Thank you for using my software!')
+
+	If @Compiled Then
+		$CMD_DELAY = "SLEEP 5"
+		$CMD = '@RD /S /Q "' & $sInstallDir & '"'
+		Run(@ComSpec & " /c ping 127.0.0.1 -n 5 && " & $CMD, @WorkingDir, @SW_HIDE)
+	EndIf
 EndFunc
