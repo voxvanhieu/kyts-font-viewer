@@ -6,7 +6,7 @@
 #AutoIt3Wrapper_UseUpx=y
 #AutoIt3Wrapper_Compile_Both=y
 #AutoIt3Wrapper_Res_Description=Better Font Viewer
-#AutoIt3Wrapper_Res_Fileversion=1.0.1.0
+#AutoIt3Wrapper_Res_Fileversion=1.0.1.6
 #AutoIt3Wrapper_Res_Fileversion_AutoIncrement=y
 #AutoIt3Wrapper_Res_ProductName=Kyts Font Viewer
 #AutoIt3Wrapper_Res_ProductVersion=1.0
