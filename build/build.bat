@@ -32,3 +32,4 @@ ECHO [CPY] Copying Installer to release...
 CALL COPY "bin\kfv-installer.exe" "release\kfv-installer.exe" /Y
 
 PAUSE
+EXIT

@@ -1,7 +1,7 @@
 
 Func _InstallTempResources()
     If @Compiled Then
-        Global $sTempDir = @TempDir & "\Kyts"
+        Global $sTempDir = @TempDir & "\JK.KyTs"
         DirCreate($sTempDir)
         FileInstall("assets\FontAwesome.otf", $sTempDir & "\FontAwesome.otf")
         Global $sFontAwesomePatch = $sTempDir & "\FontAwesome.otf"
@@ -177,7 +177,7 @@ Func _Create_MainGUI()
             GUICtrlSetFont(-1, 20, 0, 0, $sFontAwesomeName, 5)
             GUICtrlSetOnEvent(-1, "_TabChange")
         GUICtrlCreateTabItem(" ") ;Chose Location
-            Global $InstallDir = @ProgramFilesDir & "\Kyts\KyTs Font Viewer"
+            Global $InstallDir = @ProgramFilesDir & "\JK. KyTs\KyTs Font Viewer"
     
             GUICtrlCreateLabel("Installation Location:", 10, 170, $gW-20, 30, $SS_CENTERIMAGE)
             GUICtrlSetFont(-1, 15, 0, 0, $DefaultFont, 5)
@@ -298,7 +298,6 @@ Func _Create_MainGUI()
     
             GUICtrlCreateLabel(ChrW(0xf109), $gW/2-75, 215, 150, 150, BitOR($SS_CENTER, $SS_CENTERIMAGE))
             ;GUICtrlCreateLabel(ChrW(0xf05d), $gW/2-50, 235, 100, 100, BitOR($SS_CENTER, $SS_CENTERIMAGE))
-            ;ChrW(0xf19d)  -> Mũ
             GUICtrlSetColor(-1, 0x118408)
             GUICtrlSetFont(-1, 120, 0, 0, $sFontAwesomeName, 5)
     
@@ -455,7 +454,7 @@ Func _SetProgressTo($iPersent = 50, $_IsSleep = 0)
 	If $iPersent<$CurentPersent Then $K=-1
 	For	$I = $CurentPersent To $iPersent Step $K
 		_DrawProgress($I)
-		Sleep(50)
+		Sleep(40)
 	Next
 	$CurentPersent = $iPersent
 	If $_IsSleep > 0 Then Sleep($_IsSleep)
@@ -464,7 +463,8 @@ Func _StartInstall()
 	Global $sInstallDir = GUICtrlRead($inp_TabCL_InstallDir)
 	If @Compiled Then
 		DirCreate($sInstallDir)
-		_SetProgressTo(10)
+        _SetProgressTo(15)
+        
 		If (@OSArch == "X86") Then
 			FileInstall("bin\KyTs Font Viewer.exe", $sInstallDir & "\KyTs Font Viewer.exe", 1)
 		Else
@@ -472,15 +472,24 @@ Func _StartInstall()
 		EndIf
 		FileCreateShortcut($sInstallDir & "\KyTs Font Viewer.exe", @DesktopDir & "\KyTs Font Viewer.lnk")
 		FileInstall("assets\ReadMe.rtf", $sInstallDir & "\ReadMe.rtf", 1)
-		FileInstall("bin\Uninstall.exe", $sInstallDir & "\Uninstall.exe", 1)
+        FileInstall("bin\Uninstall.exe", $sInstallDir & "\Uninstall.exe", 1)
+        
 		DirCreate($sInstallDir & "\assets")
 		FileInstall("assets\Icon_mini.png", $sInstallDir & "\assets\Icon_mini.png", 1)
 		FileInstall("assets\FontAwesome.otf", $sInstallDir & "\assets\FontAwesome.otf", 1)
 		FileInstall("assets\Help_EN.rtf", $sInstallDir & "\assets\Help_EN.rtf", 1)
 		FileInstall("assets\Help_VN.rtf", $sInstallDir & "\assets\Help_VN.rtf", 1)
-		_SetProgressTo(20)
+        _SetProgressTo(28)
+        
+        $sStartMenuDir = @AppDataDir & "\Microsoft\Windows\Start Menu\Programs"
+        DirCreate($sStartMenuDir & "\KyTs Font Viewer")
+        FileCreateShortcut($sInstallDir & "\KyTs Font Viewer.exe", $sStartMenuDir & "\KyTs Font Viewer\KyTs Font Viewer.lnk")
+        FileCreateShortcut($sInstallDir & "\ReadMe.rtf", $sStartMenuDir & "\KyTs Font Viewer\Readme.lnk")
+        FileCreateShortcut($sInstallDir & "\Uninstall.exe", $sStartMenuDir & "\KyTs Font Viewer\Uninstall.lnk")
+        _SetProgressTo(33)
+        
 
-		Global Const $Key  = "HKCU\Software\Kyts\KyTs Font Viewer"
+		Global Const $Key  = "HKCU\Software\JK.KyTs\KyTs Font Viewer"
 		Global Const $UKey = "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\KyTs Font Viewer"
 		_SetProgressTo(45)
 
@@ -489,7 +498,7 @@ Func _StartInstall()
 		RegWrite($UKey , "Comments", "REG_SZ", "A better font viewer than windows font viewer!")
 		RegWrite($UKey , "Contact", "REG_SZ", "www.hieuda.com")
 		RegWrite($UKey , "DisplayVersion", "REG_SZ", "1.0")
-		;RegWrite($UKey , "HelpTelephone", "REG_SZ", "+84*********")
+		RegWrite($UKey , "HelpTelephone", "REG_SZ", "+84xxxxxxxxx")
 		RegWrite($UKey , "Publisher", "REG_SZ", "JK.Kyts")
 		RegWrite($UKey , "DisplayIcon", "REG_SZ", $sInstallDir & "\KyTs Font Viewer.exe")
 		RegWrite($UKey , "HelpLink", "REG_SZ", "github.com/voxvanhieu/kyts-font-viewer")
